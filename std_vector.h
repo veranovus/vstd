@@ -5,9 +5,9 @@
 #define _STD_VECTOR_INITIAL_CAPACITY 1
 
 struct _STDVector {
-    void *ptr;
-    usize len;
-    usize cap;
+  void *ptr;
+  usize len;
+  usize cap;
 };
 
 #define STDVector(type) struct _STDVector
@@ -41,7 +41,7 @@ struct _STDVector {
   }                                                                            \
   NULL
 
-#define std_vector_get(type, vec, index) (type)((type *)vec.ptr)[index]
+#define std_vector_get(type, vec, index) ((type *)vec.ptr)[index]
 
 #define std_vector_set(type, vec, index, item) ((type *)vec.ptr)[index] = item
 
@@ -63,6 +63,12 @@ struct _STDVector {
       memmove(ptr, ptr + 1, (vec.len - (index - 1)) * sizeof(type));           \
     }                                                                          \
     vec.len--;                                                                 \
+  }                                                                            \
+  NULL
+
+#define std_vector_foreach(type, vec, ...)                                     \
+  for (type *_iter = vec.ptr; _iter < ((type *)vec.ptr) + vec.len; ++_iter) {  \
+    __VA_ARGS__;                                                               \
   }                                                                            \
   NULL
 
