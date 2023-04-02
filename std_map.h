@@ -86,6 +86,21 @@ struct _STDMap {
   }                                                                            \
   NULL
 
+#define std_map_clear(k_t, v_t, map)                                           \
+  {                                                                            \
+    std_vector_clear(k_t, map.keys);                                           \
+    std_vector_clear(v_t, map.vals);                                           \
+    map.cache = -1;                                                            \
+  }
+
+#define std_map_free(k_t, v_t, map)                                            \
+  {                                                                            \
+    std_vector_free(k_t, map.keys);                                            \
+    std_vector_free(v_t, map.vals);                                            \
+    map.cache = -1;                                                            \
+  }                                                                            \
+  NULL
+
 #ifdef _STD_MAP_PREDEFINED_CONDITIONS
 static bool std_map_condition_isize(const isize *a, const isize *b) {
   return *(a) == *(b);
