@@ -10,7 +10,7 @@ static const usize _STD_FS_INITIAL_BUFFER_CAPACITY = 128;
 
 // Read the whole file in path into a string, returns a null string if it fails
 // to open the file.
-static String std_fs_read_file(const char *path) {
+__attribute__((unused)) static String std_fs_read_file(const char *path) {
   FILE *f = fopen(path, "r");
 
   if (!f) {
@@ -33,7 +33,8 @@ static String std_fs_read_file(const char *path) {
 }
 
 // Writes the contents into a file, if file doesn't exists creates it.
-static usize std_fs_write_file(const char *path, const char *content) {
+__attribute__((unused)) static usize std_fs_write_file(const char *path,
+                                                       const char *content) {
   FILE *f = fopen(path, "w");
 
   if (!f) {
@@ -57,7 +58,7 @@ static usize std_fs_write_file(const char *path, const char *content) {
   return 0;
 }
 
-static usize std_fs_create_dir(const char *path) {
+__attribute__((unused)) static usize std_fs_create_dir(const char *path) {
   if (mkdir(path, S_IRWXU | S_IRWXG | S_IRWXO) == -1) {
 #ifdef DEBUG
     fprintf(stderr, "Failed to create directory at `%s`.\n", path);

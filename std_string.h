@@ -13,13 +13,13 @@ typedef struct {
   usize cap;
 } String;
 
-static inline String *_std_string_realloc(String *s) {
+__attribute__((unused)) static inline String *_std_string_realloc(String *s) {
   s->cap *= 2;
   s->ptr = (char *)realloc(s->ptr, sizeof(char) * s->cap);
   return s;
 }
 
-static inline String _std_string_null() {
+__attribute__((unused)) static inline String _std_string_null() {
   return (String){
       .ptr = NULL,
       .cap = 0,
@@ -27,16 +27,16 @@ static inline String _std_string_null() {
   };
 }
 
-static String std_string_with_capacity(usize cap) {
+__attribute__((unused)) static String std_string_with_capacity(usize cap) {
   return (String){
       .ptr = (char *)calloc(cap, sizeof(char)), .cap = cap, .len = 0};
 }
 
-static String std_string_new() {
+__attribute__((unused)) static String std_string_new() {
   return std_string_with_capacity(_STD_STRING_INITIAL_CAPACITY);
 }
 
-static String std_string_from(const char *str) {
+__attribute__((unused)) static String std_string_from(const char *str) {
   usize len = strlen(str);
   String s = std_string_with_capacity(len + 1);
 
@@ -46,7 +46,7 @@ static String std_string_from(const char *str) {
   return s;
 }
 
-static String std_string_clone(const String *s) {
+__attribute__((unused)) static String std_string_clone(const String *s) {
   String clone = std_string_with_capacity(s->cap);
 
   memcpy(clone.ptr, s->ptr, sizeof(char) * s->len);
@@ -56,7 +56,7 @@ static String std_string_clone(const String *s) {
   return clone;
 }
 
-static String std_string_format(const char *fmt, ...) {
+__attribute__((unused)) static String std_string_format(const char *fmt, ...) {
   va_list argptr;
   va_start(argptr, fmt);
 
@@ -70,7 +70,7 @@ static String std_string_format(const char *fmt, ...) {
   return s;
 }
 
-static String std_string_push(String *s, char c) {
+__attribute__((unused)) static String std_string_push(String *s, char c) {
   if (s->len + 1 >= s->cap) {
     s = _std_string_realloc(s);
   }
@@ -82,7 +82,8 @@ static String std_string_push(String *s, char c) {
   return *s;
 }
 
-static String std_string_push_str(String *s, const char *str) {
+__attribute__((unused)) static String std_string_push_str(String *s,
+                                                          const char *str) {
   usize len = strlen(str);
 
   while (s->len + len >= s->cap) {
@@ -96,7 +97,8 @@ static String std_string_push_str(String *s, const char *str) {
   return *s;
 }
 
-static String std_string_remove_at(String *s, usize index, usize len) {
+__attribute__((unused)) static String
+std_string_remove_at(String *s, usize index, usize len) {
   usize move_size = s->len - ((s->ptr + index + len) - s->ptr);
 
   if (move_size > 0) {
@@ -108,7 +110,8 @@ static String std_string_remove_at(String *s, usize index, usize len) {
   return *s;
 }
 
-static String std_string_remove(String *s, const char *sub) {
+__attribute__((unused)) static String std_string_remove(String *s,
+                                                        const char *sub) {
   if (!sub[0]) {
     return *s;
   }
@@ -122,11 +125,13 @@ static String std_string_remove(String *s, const char *sub) {
   return std_string_remove_at(s, (usize)(ptr - s->ptr), len);
 }
 
-static inline char *std_string_find_first(const String *s, const char *sub) {
+__attribute__((unused)) static inline char *
+std_string_find_first(const String *s, const char *sub) {
   return strstr(s->ptr, sub);
 }
 
-static char *std_string_find_last(const String *s, const char *sub) {
+__attribute__((unused)) static char *std_string_find_last(const String *s,
+                                                          const char *sub) {
   if (!sub[0]) {
     return NULL;
   }
@@ -138,8 +143,9 @@ static char *std_string_find_last(const String *s, const char *sub) {
   return pos;
 }
 
-static inline isize std_string_compare(const String *s, const char *str) {
+__attribute__((unused)) static inline isize
+std_string_compare(const String *s, const char *str) {
   return strcmp(s->ptr, str);
 }
 
-static void std_string_free(String s) { free(s.ptr); }
+__attribute__((unused)) static void std_string_free(String s) { free(s.ptr); }
