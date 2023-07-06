@@ -99,7 +99,7 @@ __attribute__((unused)) static String std_string_push_str(String *s,
 
 __attribute__((unused)) static String
 std_string_remove_at(String *s, usize index, usize len) {
-  usize move_size = s->len - ((s->ptr + index + len) - s->ptr);
+  usize move_size = s->len - (index + len);
 
   if (move_size > 0) {
     memmove(s->ptr + index, s->ptr + index + len, move_size);
@@ -148,4 +148,8 @@ std_string_compare(const String *s, const char *str) {
   return strcmp(s->ptr, str);
 }
 
-__attribute__((unused)) static void std_string_free(String s) { free(s.ptr); }
+__attribute__((unused)) static void std_string_free(String *s) {
+  free(s->ptr);
+  s->len = 0;
+  s->cap = 0;
+}
