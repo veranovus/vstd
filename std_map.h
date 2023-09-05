@@ -11,10 +11,10 @@ struct _STDMap {
   isize cache;
 };
 
-#define STDMap(k_t, v_t) struct _STDMap
+#define STD_Map(k_t, v_t) struct _STDMap
 
 #define std_map_new(k_t, v_t, condition)                                       \
-  (STDMap(k_t, v_t)) {                                                         \
+  (STD_Map(k_t, v_t)) {                                                        \
     .keys = std_vector_new(k_t), .vals = std_vector_new(v_t),                  \
     .func_ptr = condition, .cache = -1,                                        \
   }

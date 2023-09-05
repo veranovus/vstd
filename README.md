@@ -2,7 +2,7 @@
 
 Simple utilities that I use myself to make using C a bit more comfortable.
 
-> Version 0.2.3
+> Version 0.2.4
 
 ## Modules
 

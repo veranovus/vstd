@@ -10,18 +10,18 @@ struct _STDVector {
   usize cap;
 };
 
-#define STDVector(type) struct _STDVector
+#define STD_Vector(type) struct _STDVector
 
 #define std_vector_new(type)                                                   \
   std_vector_with_capacity(type, _STD_VECTOR_INITIAL_CAPACITY)
 
 #define std_vector_with_capacity(type, capacity)                               \
-  (STDVector(type)) {                                                          \
+  (STD_Vector(type)) {                                                         \
     .ptr = malloc(sizeof(type) * capacity), .cap = capacity, .len = 0          \
   }
 
 #define std_vector_from(type, var, ...)                                        \
-  (STDVector(type)){};                                                         \
+  (STD_Vector(type)){};                                                        \
   {                                                                            \
     type temp[] = __VA_ARGS__;                                                 \
     var.ptr = malloc(sizeof(temp));                                            \
@@ -32,7 +32,7 @@ struct _STDVector {
   NULL
 
 #define std_vector_clone(type, var, other)                                     \
-  (STDVector(type)){};                                                         \
+  (STD_Vector(type)){};                                                        \
   {                                                                            \
     var.ptr = malloc(sizeof(type) * other.cap);                                \
     memcpy(var.ptr, other.ptr, sizeof(type) * other.len);                      \
