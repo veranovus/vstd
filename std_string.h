@@ -3,6 +3,8 @@
 #include "std_common.h"
 #include <stdarg.h>
 
+#define STD_STRING_STRINGIFY(name) #name
+
 #define STD_STRING_EQUAL 0
 
 static const usize _STD_STRING_INITIAL_CAPACITY = 1;
