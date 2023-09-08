@@ -117,8 +117,8 @@ __attribute__((unused)) static bool std_map_condition_string(const String *a,
   return std_string_compare(a, b->ptr) == STD_STRING_EQUAL;
 }
 
-__attribute__((unused)) static bool std_map_condition_void(const void *a,
-                                                           const void *b) {
-  return a == b;
+__attribute__((unused)) static bool std_map_condition_void(const void **a,
+                                                           const void **b) {
+  return *a == *b;
 }
 #endif
