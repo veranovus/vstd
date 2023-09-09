@@ -2,7 +2,9 @@
 
 #include "std_common.h"
 #include "std_string.h"
+#include "std_vector.h"
 
+#include <dirent.h>
 #include <errno.h>
 #include <sys/stat.h>
 
@@ -32,7 +34,32 @@ __attribute__((unused)) static String std_fs_read_file(const char *path) {
   return buff;
 }
 
-// Writes the contents into a file, if file doesn't exists creates it.
+// Reads the contents of the directory at the given path, returns an empty
+// vector if fails.
+__attribute__((unused)) static STD_Vector(String)
+    std_fs_read_dir(const char *path) {
+  DIR *d;
+  struct dirent *dir;
+
+  d = opendir(path);
+  if (!d) {
+#ifdef DEBUG
+    fprintf(stderr, "ERROR: Failed to read directory at `%s`\n.", path);
+    perror("ERROR @std_fs_read_dir");
+#endif
+    return (struct _STDVector){};
+  }
+
+  STD_Vector(String) vec = std_vector_new(String);
+  while ((dir = readdir(d)) != NULL) {
+    std_vector_push(String, vec, std_string_from(dir->d_name));
+  }
+  closedir(d);
+
+  return vec;
+}
+
+// Writes the contents into a file, if file doesn't exist creates it.
 __attribute__((unused)) static usize std_fs_write_file(const char *path,
                                                        const char *content) {
   FILE *f = fopen(path, "w");

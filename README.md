@@ -2,12 +2,12 @@
 
 Simple utilities that I use myself to make using C a bit more comfortable.
 
-> Version 0.2.6
+> Version 0.2.7
 
 ## Modules
 
 - [X] Primitives
-- [X] String 
+- [X] String
 - [X] Vector
 - [X] Map
-- [ ] File Management (Barely)
+- [X] File Management 
