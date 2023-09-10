@@ -15,13 +15,16 @@ typedef struct {
   usize cap;
 } String;
 
-__attribute__((unused)) static inline String *_std_string_realloc(String *s) {
+// STD_String helper functions
+// ---------------------------
+
+STD_INLINE String *_std_string_realloc(String *s) {
   s->cap *= 2;
   s->ptr = (char *)realloc(s->ptr, sizeof(char) * s->cap);
   return s;
 }
 
-__attribute__((unused)) static inline String _std_string_null() {
+STD_INLINE String _std_string_null() {
   return (String){
       .ptr = NULL,
       .cap = 0,
@@ -29,16 +32,19 @@ __attribute__((unused)) static inline String _std_string_null() {
   };
 }
 
-__attribute__((unused)) static String std_string_with_capacity(usize cap) {
+// STD_String
+// ==========
+
+STD_STATIC String std_string_with_capacity(usize cap) {
   return (String){
       .ptr = (char *)calloc(cap, sizeof(char)), .cap = cap, .len = 0};
 }
 
-__attribute__((unused)) static String std_string_new() {
+STD_STATIC String std_string_new() {
   return std_string_with_capacity(_STD_STRING_INITIAL_CAPACITY);
 }
 
-__attribute__((unused)) static String std_string_from(const char *str) {
+STD_STATIC String std_string_from(const char *str) {
   usize len = strlen(str);
   String s = std_string_with_capacity(len + 1);
 
@@ -48,7 +54,7 @@ __attribute__((unused)) static String std_string_from(const char *str) {
   return s;
 }
 
-__attribute__((unused)) static String std_string_clone(const String *s) {
+STD_STATIC String std_string_clone(const String *s) {
   String clone = std_string_with_capacity(s->cap);
 
   memcpy(clone.ptr, s->ptr, sizeof(char) * s->len);
@@ -58,7 +64,7 @@ __attribute__((unused)) static String std_string_clone(const String *s) {
   return clone;
 }
 
-__attribute__((unused)) static String std_string_format(const char *fmt, ...) {
+STD_STATIC String std_string_format(const char *fmt, ...) {
   va_list argptr;
   va_start(argptr, fmt);
 
@@ -72,7 +78,7 @@ __attribute__((unused)) static String std_string_format(const char *fmt, ...) {
   return s;
 }
 
-__attribute__((unused)) static String std_string_push(String *s, char c) {
+STD_STATIC String std_string_push(String *s, char c) {
   if (s->len + 1 >= s->cap) {
     s = _std_string_realloc(s);
   }
@@ -84,8 +90,7 @@ __attribute__((unused)) static String std_string_push(String *s, char c) {
   return *s;
 }
 
-__attribute__((unused)) static String std_string_push_str(String *s,
-                                                          const char *str) {
+STD_STATIC String std_string_push_str(String *s, const char *str) {
   usize len = strlen(str);
 
   while (s->len + len >= s->cap) {
@@ -99,8 +104,7 @@ __attribute__((unused)) static String std_string_push_str(String *s,
   return *s;
 }
 
-__attribute__((unused)) static String
-std_string_remove_at(String *s, usize index, usize len) {
+STD_STATIC String std_string_remove_at(String *s, usize index, usize len) {
   usize move_size = s->len - (index + len);
 
   if (move_size > 0) {
@@ -112,8 +116,7 @@ std_string_remove_at(String *s, usize index, usize len) {
   return *s;
 }
 
-__attribute__((unused)) static String std_string_remove(String *s,
-                                                        const char *sub) {
+STD_STATIC String std_string_remove(String *s, const char *sub) {
   if (!sub[0]) {
     return *s;
   }
@@ -127,13 +130,11 @@ __attribute__((unused)) static String std_string_remove(String *s,
   return std_string_remove_at(s, (usize)(ptr - s->ptr), len);
 }
 
-__attribute__((unused)) static inline char *
-std_string_find_first(const String *s, const char *sub) {
+STD_INLINE char *std_string_find_first(const String *s, const char *sub) {
   return strstr(s->ptr, sub);
 }
 
-__attribute__((unused)) static char *std_string_find_last(const String *s,
-                                                          const char *sub) {
+STD_STATIC char *std_string_find_last(const String *s, const char *sub) {
   if (!sub[0]) {
     return NULL;
   }
@@ -145,12 +146,11 @@ __attribute__((unused)) static char *std_string_find_last(const String *s,
   return pos;
 }
 
-__attribute__((unused)) static inline isize
-std_string_compare(const String *s, const char *str) {
+STD_INLINE isize std_string_compare(const String *s, const char *str) {
   return strcmp(s->ptr, str);
 }
 
-__attribute__((unused)) static void std_string_free(String *s) {
+STD_STATIC void std_string_free(String *s) {
   free(s->ptr);
   s->len = 0;
   s->cap = 0;

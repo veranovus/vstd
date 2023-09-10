@@ -11,6 +11,9 @@ struct _STDMap {
   isize cache;
 };
 
+// STD_Map
+// =======
+
 #define STD_Map(k_t, v_t) struct _STDMap
 
 #define std_map_new(k_t, v_t, condition)                                       \
@@ -102,23 +105,19 @@ struct _STDMap {
   NULL
 
 #ifdef _STD_MAP_PREDEFINED_CONDITIONS
-__attribute__((unused)) static bool std_map_condition_isize(const isize *a,
-                                                            const isize *b) {
+STD_STATIC bool std_map_condition_isize(const isize *a, const isize *b) {
   return *(a) == *(b);
 }
 
-__attribute__((unused)) static bool std_map_condition_usize(const usize *a,
-                                                            const usize *b) {
+STD_STATIC bool std_map_condition_usize(const usize *a, const usize *b) {
   return *(a) == *(b);
 }
 
-__attribute__((unused)) static bool std_map_condition_string(const String *a,
-                                                             const String *b) {
+STD_STATIC bool std_map_condition_string(const String *a, const String *b) {
   return std_string_compare(a, b->ptr) == STD_STRING_EQUAL;
 }
 
-__attribute__((unused)) static bool std_map_condition_void(const void **a,
-                                                           const void **b) {
+STD_STATIC bool std_map_condition_void(const void **a, const void **b) {
   return *a == *b;
 }
 #endif

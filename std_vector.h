@@ -10,6 +10,9 @@ struct _STDVector {
   usize cap;
 };
 
+// STD_Vector
+// ==========
+
 #define STD_Vector(type) struct _STDVector
 
 #define std_vector_new(type)                                                   \

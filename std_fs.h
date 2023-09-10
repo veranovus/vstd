@@ -10,9 +10,12 @@
 
 static const usize _STD_FS_INITIAL_BUFFER_CAPACITY = 128;
 
+// STD_FS
+// ======
+
 // Read the whole file in path into a string, returns a null string if it fails
 // to open the file.
-__attribute__((unused)) static String std_fs_read_file(const char *path) {
+STD_STATIC String std_fs_read_file(const char *path) {
   FILE *f = fopen(path, "r");
 
   if (!f) {
@@ -36,8 +39,7 @@ __attribute__((unused)) static String std_fs_read_file(const char *path) {
 
 // Reads the contents of the directory at the given path, returns an empty
 // vector if fails.
-__attribute__((unused)) static STD_Vector(String)
-    std_fs_read_dir(const char *path) {
+STD_STATIC STD_Vector(String) std_fs_read_dir(const char *path) {
   DIR *d;
   struct dirent *dir;
 
@@ -60,8 +62,7 @@ __attribute__((unused)) static STD_Vector(String)
 }
 
 // Writes the contents into a file, if file doesn't exist creates it.
-__attribute__((unused)) static usize std_fs_write_file(const char *path,
-                                                       const char *content) {
+STD_STATIC usize std_fs_write_file(const char *path, const char *content) {
   FILE *f = fopen(path, "w");
 
   if (!f) {
@@ -85,7 +86,7 @@ __attribute__((unused)) static usize std_fs_write_file(const char *path,
   return 0;
 }
 
-__attribute__((unused)) static usize std_fs_create_dir(const char *path) {
+STD_STATIC usize std_fs_create_dir(const char *path) {
   if (mkdir(path, S_IRWXU | S_IRWXG | S_IRWXO) == -1) {
 #ifdef DEBUG
     fprintf(stderr, "Failed to create directory at `%s`.\n", path);

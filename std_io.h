@@ -3,7 +3,10 @@
 #include "std_common.h"
 #include "std_string.h"
 
-String std_io_read_line(usize max_char) {
+// STD_IO
+// ======
+
+STD_STATIC String std_io_read_line(usize max_char) {
   String line = std_string_with_capacity(max_char);
 
   fgets(line.ptr, (i32)max_char, stdin);
