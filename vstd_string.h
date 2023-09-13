@@ -1,13 +1,14 @@
 #pragma once
 
-#include "std_common.h"
+#include "vstd_common.h"
+
 #include <stdarg.h>
 
-#define STD_STRING_STRINGIFY(name) #name
+#define VSTD_STRING_STRINGIFY(name) #name
 
-#define STD_STRING_EQUAL 0
+#define VSTD_STRING_EQUAL 0
 
-static const usize _STD_STRING_INITIAL_CAPACITY = 1;
+static const usize _VSTD_STRING_INITIAL_CAPACITY = 1;
 
 typedef struct {
   char *ptr;
@@ -15,16 +16,16 @@ typedef struct {
   usize cap;
 } String;
 
-// STD_String helper functions
-// ---------------------------
+// VSTD_String helper functions
+// ----------------------------
 
-STD_INLINE String *_std_string_realloc(String *s) {
+VSTD_INLINE String *_vstd_string_realloc(String *s) {
   s->cap *= 2;
   s->ptr = (char *)realloc(s->ptr, sizeof(char) * s->cap);
   return s;
 }
 
-STD_INLINE String _std_string_null() {
+VSTD_INLINE String _vstd_string_null() {
   return (String){
       .ptr = NULL,
       .cap = 0,
@@ -32,21 +33,21 @@ STD_INLINE String _std_string_null() {
   };
 }
 
-// STD_String
-// ==========
+// VSTD_String
+// ===========
 
-STD_STATIC String std_string_with_capacity(usize cap) {
+VSTD_STATIC String vstd_string_with_capacity(usize cap) {
   return (String){
       .ptr = (char *)calloc(cap, sizeof(char)), .cap = cap, .len = 0};
 }
 
-STD_STATIC String std_string_new() {
-  return std_string_with_capacity(_STD_STRING_INITIAL_CAPACITY);
+VSTD_STATIC String vstd_string_new() {
+  return vstd_string_with_capacity(_VSTD_STRING_INITIAL_CAPACITY);
 }
 
-STD_STATIC String std_string_from(const char *str) {
+VSTD_STATIC String vstd_string_from(const char *str) {
   usize len = strlen(str);
-  String s = std_string_with_capacity(len + 1);
+  String s = vstd_string_with_capacity(len + 1);
 
   strcpy(s.ptr, str);
   s.len = len;
@@ -54,8 +55,8 @@ STD_STATIC String std_string_from(const char *str) {
   return s;
 }
 
-STD_STATIC String std_string_clone(const String *s) {
-  String clone = std_string_with_capacity(s->cap);
+VSTD_STATIC String vstd_string_clone(const String *s) {
+  String clone = vstd_string_with_capacity(s->cap);
 
   memcpy(clone.ptr, s->ptr, sizeof(char) * s->len);
   clone.len = s->len;
@@ -64,12 +65,12 @@ STD_STATIC String std_string_clone(const String *s) {
   return clone;
 }
 
-STD_STATIC String std_string_format(const char *fmt, ...) {
+VSTD_STATIC String vstd_string_format(const char *fmt, ...) {
   va_list argptr;
   va_start(argptr, fmt);
 
   usize len = vsnprintf(NULL, 0, fmt, argptr);
-  String s = std_string_with_capacity(len + 1);
+  String s = vstd_string_with_capacity(len + 1);
 
   vsnprintf(s.ptr, s.cap, fmt, argptr);
   s.len = len;
@@ -78,9 +79,9 @@ STD_STATIC String std_string_format(const char *fmt, ...) {
   return s;
 }
 
-STD_STATIC String std_string_push(String *s, char c) {
+VSTD_STATIC String vstd_string_push(String *s, char c) {
   if (s->len + 1 >= s->cap) {
-    s = _std_string_realloc(s);
+    s = _vstd_string_realloc(s);
   }
 
   s->ptr[s->len] = c;
@@ -90,11 +91,11 @@ STD_STATIC String std_string_push(String *s, char c) {
   return *s;
 }
 
-STD_STATIC String std_string_push_str(String *s, const char *str) {
+VSTD_STATIC String vstd_string_push_str(String *s, const char *str) {
   usize len = strlen(str);
 
   while (s->len + len >= s->cap) {
-    s = _std_string_realloc(s);
+    s = _vstd_string_realloc(s);
   }
 
   strcpy(s->ptr + s->len, str);
@@ -104,7 +105,7 @@ STD_STATIC String std_string_push_str(String *s, const char *str) {
   return *s;
 }
 
-STD_STATIC String std_string_remove_at(String *s, usize index, usize len) {
+VSTD_STATIC String vstd_string_remove_at(String *s, usize index, usize len) {
   usize move_size = s->len - (index + len);
 
   if (move_size > 0) {
@@ -116,7 +117,7 @@ STD_STATIC String std_string_remove_at(String *s, usize index, usize len) {
   return *s;
 }
 
-STD_STATIC String std_string_remove(String *s, const char *sub) {
+VSTD_STATIC String vstd_string_remove(String *s, const char *sub) {
   if (!sub[0]) {
     return *s;
   }
@@ -127,14 +128,14 @@ STD_STATIC String std_string_remove(String *s, const char *sub) {
     return *s;
   }
 
-  return std_string_remove_at(s, (usize)(ptr - s->ptr), len);
+  return vstd_string_remove_at(s, (usize)(ptr - s->ptr), len);
 }
 
-STD_INLINE char *std_string_find_first(const String *s, const char *sub) {
+VSTD_INLINE char *vstd_string_find_first(const String *s, const char *sub) {
   return strstr(s->ptr, sub);
 }
 
-STD_STATIC char *std_string_find_last(const String *s, const char *sub) {
+VSTD_STATIC char *vstd_string_find_last(const String *s, const char *sub) {
   if (!sub[0]) {
     return NULL;
   }
@@ -146,11 +147,11 @@ STD_STATIC char *std_string_find_last(const String *s, const char *sub) {
   return pos;
 }
 
-STD_INLINE isize std_string_compare(const String *s, const char *str) {
+VSTD_INLINE isize vstd_string_compare(const String *s, const char *str) {
   return strcmp(s->ptr, str);
 }
 
-STD_STATIC void std_string_free(String *s) {
+VSTD_STATIC void vstd_string_free(String *s) {
   free(s->ptr);
   s->len = 0;
   s->cap = 0;

@@ -1,30 +1,30 @@
 #pragma once
 
-#include "std_common.h"
+#include "vstd_common.h"
 
-#define _STD_VECTOR_INITIAL_CAPACITY 1
+#define _VSTD_VECTOR_INITIAL_CAPACITY 1
 
-struct _STDVector {
+struct _VSTDVector {
   void *ptr;
   usize len;
   usize cap;
 };
 
-// STD_Vector
+// VSTD_Vector
 // ==========
 
-#define STD_Vector(type) struct _STDVector
+#define VSTD_Vector(type) struct _VSTDVector
 
-#define std_vector_new(type)                                                   \
-  std_vector_with_capacity(type, _STD_VECTOR_INITIAL_CAPACITY)
+#define vstd_vector_new(type)                                                  \
+  vstd_vector_with_capacity(type, _VSTD_VECTOR_INITIAL_CAPACITY)
 
-#define std_vector_with_capacity(type, capacity)                               \
-  (STD_Vector(type)) {                                                         \
+#define vstd_vector_with_capacity(type, capacity)                              \
+  (VSTD_Vector(type)) {                                                        \
     .ptr = malloc(sizeof(type) * capacity), .cap = capacity, .len = 0          \
   }
 
-#define std_vector_from(type, var, ...)                                        \
-  (STD_Vector(type)){};                                                        \
+#define vstd_vector_from(type, var, ...)                                       \
+  (VSTD_Vector(type)){};                                                       \
   {                                                                            \
     type temp[] = __VA_ARGS__;                                                 \
     var.ptr = malloc(sizeof(temp));                                            \
@@ -34,8 +34,8 @@ struct _STDVector {
   }                                                                            \
   NULL
 
-#define std_vector_clone(type, var, other)                                     \
-  (STD_Vector(type)){};                                                        \
+#define vstd_vector_clone(type, var, other)                                    \
+  (VSTD_Vector(type)){};                                                       \
   {                                                                            \
     var.ptr = malloc(sizeof(type) * other.cap);                                \
     memcpy(var.ptr, other.ptr, sizeof(type) * other.len);                      \
@@ -44,22 +44,22 @@ struct _STDVector {
   }                                                                            \
   NULL
 
-#define std_vector_get(type, vec, index) ((type *)vec.ptr)[index]
+#define vstd_vector_get(type, vec, index) ((type *)vec.ptr)[index]
 
-#define std_vector_set(type, vec, index, item) ((type *)vec.ptr)[index] = item
+#define vstd_vector_set(type, vec, index, item) ((type *)vec.ptr)[index] = item
 
-#define std_vector_push(type, vec, item)                                       \
+#define vstd_vector_push(type, vec, item)                                      \
   {                                                                            \
     if (vec.len + 1 >= vec.cap) {                                              \
       vec.cap *= 2;                                                            \
       vec.ptr = realloc(vec.ptr, vec.cap * sizeof(type));                      \
     }                                                                          \
-    std_vector_set(type, vec, vec.len, item);                                  \
+    vstd_vector_set(type, vec, vec.len, item);                                 \
     vec.len++;                                                                 \
   }                                                                            \
   NULL
 
-#define std_vector_remove(type, vec, index)                                    \
+#define vstd_vector_remove(type, vec, index)                                   \
   {                                                                            \
     if (index != vec.len - 1) {                                                \
       type *ptr = vec.ptr + index;                                             \
@@ -69,15 +69,17 @@ struct _STDVector {
   }                                                                            \
   NULL
 
-#define std_vector_foreach(type, vec, ...)                                     \
-  for (type *_iter = vec.ptr; _iter < ((type *)vec.ptr) + vec.len; ++_iter) {  \
+#define vstd_vector_iter(type, vec, ...)                                       \
+  for (type *_$iter = vec.ptr; _$iter < ((type *)vec.ptr) + vec.len;           \
+       ++_$iter) {                                                             \
+    usize _$i = ((void *)_$iter - vec.ptr) / sizeof(type);                     \
     __VA_ARGS__;                                                               \
   }                                                                            \
   NULL
 
-#define std_vector_clear(type, vec) vec.len = 0
+#define vstd_vector_clear(type, vec) vec.len = 0
 
-#define std_vector_free(type, vec)                                             \
+#define vstd_vector_free(type, vec)                                            \
   {                                                                            \
     free(vec.ptr);                                                             \
     vec.ptr = NULL;                                                            \

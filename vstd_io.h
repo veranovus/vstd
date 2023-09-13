@@ -1,13 +1,13 @@
 #pragma once
 
-#include "std_common.h"
-#include "std_string.h"
+#include "vstd_common.h"
+#include "vstd_string.h"
 
-// STD_IO
-// ======
+// VSTD_IO
+// =======
 
-STD_STATIC String std_io_read_line(usize max_char) {
-  String line = std_string_with_capacity(max_char);
+VSTD_STATIC String vstd_io_read_line(usize max_char) {
+  String line = vstd_string_with_capacity(max_char);
 
   fgets(line.ptr, (i32)max_char, stdin);
 

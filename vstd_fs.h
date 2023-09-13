@@ -1,45 +1,54 @@
 #pragma once
 
-#include "std_common.h"
-#include "std_string.h"
-#include "std_vector.h"
+#include "vstd_common.h"
+#include "vstd_string.h"
+#include "vstd_vector.h"
 
 #include <dirent.h>
 #include <errno.h>
 #include <sys/stat.h>
 
-static const usize _STD_FS_INITIAL_BUFFER_CAPACITY = 128;
-
-// STD_FS
-// ======
+// VSTD_FS
+// =======
 
 // Read the whole file in path into a string, returns a null string if it fails
 // to open the file.
-STD_STATIC String std_fs_read_file(const char *path) {
+VSTD_STATIC String vstd_fs_read_file(const char *path) {
+  /* TODO: Potential Improvement
+   * Maybe change "r" to "rb" to make this function more general purpose.
+   */
   FILE *f = fopen(path, "r");
 
   if (!f) {
 #ifdef DEBUG
     fprintf(stderr, "Failed to open file at `%s` to read.\n", path);
-    perror("ERROR @std_fs_read_file");
+    perror("ERROR @vstd_fs_read_file");
 #endif
-    return _std_string_null();
+    return _vstd_string_null();
   }
 
-  String buff = std_string_with_capacity(_STD_FS_INITIAL_BUFFER_CAPACITY);
+  fseek(f, 0, SEEK_END);
+  usize size = ftell(f);
+  fseek(f, 0, SEEK_SET);
 
-  char c;
-  while ((c = fgetc(f)) != EOF) {
-    std_string_push(&buff, c);
+  String buff = vstd_string_with_capacity(size + 1);
+
+  usize read = fread(buff.ptr, size, 1, f);
+  if (read != 1) {
+    fprintf(stderr, "Failed to read file at `%s`.\n", path);
+    perror("ERROR @vstd_fs_read_file");
   }
-
   fclose(f);
+
+  buff.len = size;
+  buff.ptr[buff.len] = '\0';
+
   return buff;
 }
 
 // Reads the contents of the directory at the given path, returns an empty
 // vector if fails.
-STD_STATIC STD_Vector(String) std_fs_read_dir(const char *path) {
+VSTD_STATIC VSTD_Vector(String) vstd_fs_read_dir(const char *path) {
   DIR *d;
   struct dirent *dir;
 
@@ -47,14 +56,14 @@ STD_STATIC STD_Vector(String) std_fs_read_dir(const char *path) {
   if (!d) {
 #ifdef DEBUG
     fprintf(stderr, "ERROR: Failed to read directory at `%s`\n.", path);
-    perror("ERROR @std_fs_read_dir");
+    perror("ERROR @vstd_fs_read_dir");
 #endif
-    return (struct _STDVector){};
+    return (struct _VSTDVector){};
   }
 
-  STD_Vector(String) vec = std_vector_new(String);
+  VSTD_Vector(String) vec = vstd_vector_new(String);
   while ((dir = readdir(d)) != NULL) {
-    std_vector_push(String, vec, std_string_from(dir->d_name));
+    vstd_vector_push(String, vec, vstd_string_from(dir->d_name));
   }
   closedir(d);
 
@@ -62,13 +71,13 @@ STD_STATIC STD_Vector(String) std_fs_read_dir(const char *path) {
 }
 
 // Writes the contents into a file, if file doesn't exist creates it.
-STD_STATIC usize std_fs_write_file(const char *path, const char *content) {
+VSTD_STATIC usize vstd_fs_write_file(const char *path, const char *content) {
   FILE *f = fopen(path, "w");
 
   if (!f) {
 #ifdef DEBUG
     fprintf(stderr, "Failed to open file at `%s` to write.\n", path);
-    perror("ERROR @std_fs_write_file");
+    perror("ERROR @vstd_fs_write_file");
 #endif
     return errno;
   }
@@ -77,7 +86,7 @@ STD_STATIC usize std_fs_write_file(const char *path, const char *content) {
   if (rc == EOF) {
 #ifdef DEBUG
     fprintf(stderr, "Failed to write to file at `%s`.\n", path);
-    perror("ERROR @std_fs_write_file");
+    perror("ERROR @vstd_fs_write_file");
 #endif
     return errno;
   }
@@ -86,11 +95,11 @@ STD_STATIC usize std_fs_write_file(const char *path, const char *content) {
   return 0;
 }
 
-STD_STATIC usize std_fs_create_dir(const char *path) {
+VSTD_STATIC usize vstd_fs_create_dir(const char *path) {
   if (mkdir(path, S_IRWXU | S_IRWXG | S_IRWXO) == -1) {
 #ifdef DEBUG
     fprintf(stderr, "Failed to create directory at `%s`.\n", path);
-    perror("ERROR @std_fs_create_dir");
+    perror("ERROR @vstd_fs_create_dir");
 #endif
     return errno;
   }
