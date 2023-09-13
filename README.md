@@ -58,7 +58,7 @@ int main(i32 argc, char **argv) {
 }
 ```
 
-## vstd_vector
+## vstd_vector.h
 
 Vector type for dynamic arrays, it stores everything as a void pointer and casts to desired type when an element is
 accessed. Here is a simple example for how you can use it.
@@ -93,7 +93,7 @@ int main(i32 argc, char **argv) {
 }
 ```
 
-## vstd_map
+## vstd_map.h
 
 Map type for storing keys and values, it requires you to provide a condition function to check equalities between keys.
 There are some predefined conditions for String and native C types.
