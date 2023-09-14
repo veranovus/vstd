@@ -16,7 +16,7 @@ Simple utilities to make using C a bit more comfortable.
 
 ## vstd_common.h
 
-Some typedefs for default C types to make them a bit more clear, also include a lot of commonly used C standard library
+Some typedefs for default C types to make them a bit more clear, also includes a lot of commonly used C standard library
 headers.
 
 ```c
@@ -61,7 +61,7 @@ int main(i32 argc, char **argv) {
 ## vstd_vector.h
 
 Vector type for dynamic arrays, it stores everything as a void pointer and casts to desired type when an element is
-accessed. Here is a simple example for how you can use it.
+accessed.
 
 ```c
 #include <vstd/vstd.h>
