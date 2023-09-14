@@ -24,7 +24,13 @@
 #define VSTD_H_
 
 /*****************************************************************************
- * Commonly used C standard headers, and type abbreviations used by vstd.
+ *
+ * @section
+ *   VSTD Common
+ *
+ * @description
+ *   Commonly used C standard headers, and type abbreviations.
+ *
  * */
 
 #include <inttypes.h>
@@ -60,6 +66,13 @@ typedef double f64;
 
 /*****************************************************************************
  *
+ * @section
+ *   VSTD String
+ *
+ */
+
+/*****************************************************************************
+ *
  * @type:
  *   VSTD_String
  *
@@ -84,7 +97,9 @@ typedef struct _VSTD_String VSTD_String;
 #define _VSTD_String VSTD_String
 #endif
 
-#define _VSTD_STRING_INITIAL_CAP 1
+#ifndef VSTD_STRING_INITIAL_CAP
+#define VSTD_STRING_INITIAL_CAP 1
+#endif
 
 /*****************************************************************************
  *
@@ -93,10 +108,10 @@ typedef struct _VSTD_String VSTD_String;
  *
  * @description
  *   Creates a new empty VSTD_String object, this function internally calls
- *   vstd_string_with_capacity with _VSTD_STRING_INITIAL_CAP as the argument.
+ *   vstd_string_with_capacity with VSTD_STRING_INITIAL_CAP as the argument.
  *
  * @return
- *   New empty VSTD_String with capacity of _VSTD_STRING_INITIAL_CAP.
+ *   New empty VSTD_String with capacity of VSTD_STRING_INITIAL_CAP.
  *
  * */
 VSTD_STATIC _VSTD_String vstd_string_new();
@@ -213,10 +228,52 @@ VSTD_STATIC _VSTD_String *vstd_string_push(_VSTD_String *string, char c);
  * */
 VSTD_STATIC _VSTD_String *vstd_string_push_str(_VSTD_String *string,
                                                const char *str);
-VSTD_STATIC _VSTD_String *vstd_string_remove_at(_VSTD_String *string,
-                                                usize index, usize len);
+
+/*****************************************************************************
+ *
+ * @function
+ *   vstd_string_remove
+ *
+ * @description
+ *   Tries to remove the given C string if it is present in the given
+ *   VSTD_String.
+ *
+ * @param[in]
+ *   string : VSTD_String to modify.
+ * @param[in]
+ *   sub : Null terminated C string to remove.
+ *
+ * @return
+ *   Pointer to same VSTD_String, it may or may not be modified depending on
+ *   whether or not the given C string is present in it.
+ *
+ * */
 VSTD_STATIC _VSTD_String *vstd_string_remove(_VSTD_String *string,
                                              const char *sub);
+
+/*****************************************************************************
+ *
+ * @function
+ *   vstd_string_remove_at
+ *
+ * @description
+ *   Removes n number of characters starting from the given index for the given
+ *   VSTD_String.
+ *
+ * @param[in]
+ *   string : VSTD_String to modify.
+ * @param[in]
+ *   index : Starting index for removal.
+ * @param[in]
+ *   len : Number of characters to remove.
+ *
+ * @return
+ *   Pointer to same modified VSTD_String.
+ *
+ * */
+VSTD_STATIC _VSTD_String *vstd_string_remove_at(_VSTD_String *string,
+                                                usize index, usize len);
+
 VSTD_STATIC char *vstd_string_find_first(const _VSTD_String *string,
                                          const char *sub);
 VSTD_STATIC char *vstd_string_find_last(const _VSTD_String *string,
