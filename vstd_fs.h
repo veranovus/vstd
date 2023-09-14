@@ -4,10 +4,6 @@
 #include "vstd_string.h"
 #include "vstd_vector.h"
 
-#include <dirent.h>
-#include <errno.h>
-#include <sys/stat.h>
-
 // VSTD_FS
 // =======
 

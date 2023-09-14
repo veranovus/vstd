@@ -33,6 +33,8 @@
  *
  * */
 
+#include <dirent.h>
+#include <errno.h>
 #include <inttypes.h>
 #include <memory.h>
 #include <stdarg.h>
@@ -40,6 +42,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <sys/stat.h>
 
 typedef size_t usize;
 typedef intmax_t isize;
@@ -773,8 +776,8 @@ struct _VSTD_Vector {
  *   vstd_vector_iter
  *
  * @description
- *   Helper function to easily iterate trough the length of the _VSTD_Vector. In
- *   every iteration you can access the current item from _$iter and current
+ *   Helper function to easily iterate trough the length of the _VSTD_Vector.
+ *   In every iteration you can access the current item from _$iter and current
  *   index from _$i.
  *
  * @param[in]
@@ -832,5 +835,39 @@ struct _VSTD_Vector {
     vec.len = 0;                                                               \
   }                                                                            \
   NULL
+
+/*****************************************************************************
+ *
+ * @section
+ *   VSTD Map
+ *
+ * */
+
+/*****************************************************************************
+ *
+ * @type
+ *   _VSTD_Map
+ *
+ * @description
+ *   Map implementation, this type doesn't allocate any memory for itself, but
+ *   its underlying _VSTD_Vector's allocate memory for their pointers. Thus it's
+ *   safe to pass this type to functions as it is, as long as said function
+ *   doesn't alter any of the properties of _VSTD_Map or its _VSTD_Vector's.
+ *   Otherwise you should pass it as reference or you may lose the underlying
+ *   pointers of the _VSTD_Vector's.
+ *
+ * */
+struct _VSTD_Map {
+  struct _VSTD_Vector keys;
+  struct _VSTD_Vector vals;
+  void *func_ptr;
+  isize cache;
+};
+
+#ifdef VSTD_MAP_STRIP_PREFIX
+#define Map(K, V) struct _VSTD_Map
+#else
+#define VSTD_Map(K, V) struct _VSTD_Map
+#endif
 
 #endif // VSTD_H_
