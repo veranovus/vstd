@@ -615,16 +615,17 @@ struct _VSTD_Vector {
  * @description
  *   Creates a new _VSTD_Vector containing the data in the initializer list.
  *   Data is first assigned to a temporary variable then copied to the var.
+ *   Returns a non-allocated _VSTD_Vector to allow single line initializations.
  *
  * @param[in]
  *   type : Type of the _VSTD_Vector's data.
- * @param[in]
- *   var : Name of the variable to assign the vector.
+ * @param[out]
+ *   var : Variable to assign the vector.
  * @param[in]
  *   ... : Initializer list
  *
  * @return
- *   New _VSTD_Vector containing the data in the initializer list.
+ *   New non-allocated _VSTD_Vector.
  *
  * */
 #define vstd_vector_from(type, var, ...)                                       \
@@ -644,17 +645,18 @@ struct _VSTD_Vector {
  *   vstd_vector_clone
  *
  * @description
- *   Clones the given _VSTD_Vector and assigns the clone to var.
+ *   Clones the given _VSTD_Vector and assigns the clone to var. Returns a
+ *   non-allocated _VSTD_Vector to allow single line initializations.
  *
  * @param[in]
  *   type : Type of the _VSTD_Vector's data.
- * @param[in]
- *   var : Name of the variable to assign the clone.
+ * @param[out]
+ *   var : Variable to assign the clone.
  * @param[in]
  *   other : _VSTD_Vector to clone.
  *
  * @return
- *   New _VSTD_Vector identical to other.
+ *   New non-allocated _VSTD_Vector.
  *
  * */
 #define vstd_vector_clone(type, var, other)                                    \
@@ -673,7 +675,7 @@ struct _VSTD_Vector {
  *   vstd_vector_get
  *
  * @description
- *   Returns the item at the given index. This is the only way to access an
+ *   Returns the item at the given index. This is the intended way to access an
  *   element from _VSTD_Vector since _VSTD_Vector needs to be casted to desired
  *   type first.
  *
@@ -743,8 +745,8 @@ struct _VSTD_Vector {
  *   vstd_vector_remove
  *
  * @description
- *   Removes the item ad given index from _VSTD_Vector. If item is not at the
- *   end of the _VSTD_Vector remaining items are shifted to left.
+ *   Removes the item at the given index from _VSTD_Vector. If item is not at
+ *   the end of the _VSTD_Vector remaining items are shifted to left.
  *
  * @param[in]
  *   type : Type of the _VSTD_Vector's data.
@@ -770,9 +772,9 @@ struct _VSTD_Vector {
  *   vstd_vector_iter
  *
  * @description
- *   Helper function to easily iterate trough the whole _VSTD_Vector. In every
- *   iteration you can access the current item from _$iter and current index
- *   from _$i.
+ *   Helper function to easily iterate trough the length of the _VSTD_Vector. In
+ *   every iteration you can access the current item from _$iter and current
+ *   index from _$i.
  *
  * @param[in]
  *   type : Type of the _VSTD_Vector's data.
