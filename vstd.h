@@ -342,7 +342,7 @@ VSTD_STATIC char *vstd_string_find_last(const _VSTD_String *string,
  * @description
  *   Compares the given C string with the given _VSTD_String. This function is
  *   only there for API consistency, underlying implementation of this function
- *   just calls strcmp thus behaviour is identical to that function. For more
+ *   just calls strcmp thus, behaviour is identical to that function. For more
  *   information about strcmp you can check:
  *   https://pubs.opengroup.org/onlinepubs/9699919799.2016edition/functions/strcmp.html
  *
@@ -549,7 +549,7 @@ VSTD_INLINE void _vstd_string_realloc(_VSTD_String *string) {
  *   modify the vector's pointer or other properties. Otherwise you should pass
  *   it as a reference, or you may lose the underlying pointer. Even though
  *   functions that are defined for _VSTD_Vector in this library modifies those
- *   values, they are an exception to this rule, since they are not ordinary
+ *   values, they are an exception to this rule since they are not ordinary
  *   functions but macros instead, and passing by reference to those macros will
  *   break them.
  *
