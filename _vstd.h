@@ -77,13 +77,14 @@ typedef double f64;
 /*****************************************************************************
  *
  * @type:
- *   VSTD_String
+ *   _VSTD_String
  *
  * @description:
  *   String implementation, this struct never allocates memory for itself, but
  *   only for its underlying pointer. Whenever you're passing an instance of
  *   this type its safe to pass it as it is to a function, as long as that
- *   function doesn't modify the string or any of it's elements.
+ *   function doesn't modify the string's pointer or other properties. Otherwise
+ *   you should pass it as a reference, or you may lose the underlying pointer.
  *
  * */
 struct _VSTD_String {
@@ -119,11 +120,11 @@ typedef struct _VSTD_String VSTD_String;
  *   vstd_string_new
  *
  * @description
- *   Creates a new empty VSTD_String object, this function internally calls
+ *   Creates a new empty _VSTD_String object, this function internally calls
  *   vstd_string_with_capacity with VSTD_STRING_INITIAL_CAP as the argument.
  *
  * @return
- *   New empty VSTD_String with capacity of VSTD_STRING_INITIAL_CAP.
+ *   New empty _VSTD_String with capacity of VSTD_STRING_INITIAL_CAP.
  *
  * */
 VSTD_INLINE _VSTD_String vstd_string_new();
@@ -134,14 +135,13 @@ VSTD_INLINE _VSTD_String vstd_string_new();
  *   vstd_string_with_capacity
  *
  * @description
- *   Creates a new empty VSTD_String object with given capacity, memory is only
- *   allocated for the underlying pointer.
+ *   Creates a new empty _VSTD_String object with the given capacity.
  *
  * @param[in]
- *   cap : Capacity for the new VSTD_String.
+ *   cap : Capacity for the new _VSTD_String.
  *
  * @return
- *   New empty VSTD_String with the given capacity.
+ *   New empty _VSTD_String with given capacity.
  *
  * */
 VSTD_STATIC _VSTD_String vstd_string_with_capacity(usize cap);
@@ -152,13 +152,13 @@ VSTD_STATIC _VSTD_String vstd_string_with_capacity(usize cap);
  *   vstd_string_from
  *
  * @description
- *   Creates a new null terminated VSTD_String from given C string.
+ *   Creates a new null terminated _VSTD_String from given C string.
  *
  * @param[in]
  *   str : Null terminated C string to copy from.
  *
  * @return
- *   New null terminated VSTD_String with the same contents as the given C
+ *   New null terminated _VSTD_String with the same contents as the given C
  *   string.
  *
  * */
@@ -170,13 +170,13 @@ VSTD_STATIC _VSTD_String vstd_string_from(const char *str);
  *   vstd_string_clone
  *
  * @description
- *   Clones the given VSTD_String and returns the clone.
+ *   Clones the given _VSTD_String and returns the clone.
  *
  * @param[in]
- *   string : VSTD_String to clone.
+ *   string : _VSTD_String to clone.
  *
  * @return
- *   New VSTD_String identical to the given VSTD_String.
+ *   New _VSTD_String identical to the given _VSTD_String.
  *
  * */
 VSTD_STATIC _VSTD_String vstd_string_clone(const _VSTD_String *string);
@@ -187,7 +187,7 @@ VSTD_STATIC _VSTD_String vstd_string_clone(const _VSTD_String *string);
  *   vstd_string_format
  *
  * @description
- *   Creates a new VSTD_String using the formatted contents.
+ *   Creates a new _VSTD_String using the formatted contents.
  *
  * @param[in]
  *   fmt : Null terminated C string specifying how to interpret the data.
@@ -195,7 +195,7 @@ VSTD_STATIC _VSTD_String vstd_string_clone(const _VSTD_String *string);
  *   ... : Arguments specifying the data to format.
  *
  * @return
- *   New VSTD_String with the formatted contents.
+ *   New _VSTD_String with the formatted contents.
  *
  * */
 VSTD_STATIC _VSTD_String vstd_string_format(const char *fmt, ...);
@@ -206,16 +206,16 @@ VSTD_STATIC _VSTD_String vstd_string_format(const char *fmt, ...);
  *   vstd_string_push
  *
  * @description
- *   Adds the given character to the end of given VSTD_String, this function
- *   may resize the given VSTD_String.
+ *   Adds the given character to the end of given _VSTD_String, this function
+ *   may resize the given _VSTD_String.
  *
  * @param[in]
- *   string : VSTD_String to modify.
+ *   string : _VSTD_String to modify.
  * @param[in]
  *   c : Character to push.
  *
  * @return
- *   Pointer to same modified VSTD_String.
+ *   Pointer to same modified _VSTD_String.
  *
  * */
 VSTD_STATIC _VSTD_String *vstd_string_push(_VSTD_String *string, char c);
@@ -226,16 +226,16 @@ VSTD_STATIC _VSTD_String *vstd_string_push(_VSTD_String *string, char c);
  *   vstd_string_push_str
  *
  * @description
- *   Adds the C string to the end of given VSTD_String, this function
- *   may resize the given VSTD_String.
+ *   Adds the C string to the end of given _VSTD_String, this function
+ *   may resize the given _VSTD_String.
  *
  * @param[in]
- *   string : VSTD_String to modify.
+ *   string : _VSTD_String to modify.
  * @param[in]
  *   str : Null terminated C string to push.
  *
  * @return
- *   Pointer to same modified VSTD_String.
+ *   Pointer to same modified _VSTD_String.
  *
  * */
 VSTD_STATIC _VSTD_String *vstd_string_push_str(_VSTD_String *string,
@@ -248,15 +248,15 @@ VSTD_STATIC _VSTD_String *vstd_string_push_str(_VSTD_String *string,
  *
  * @description
  *   Tries to remove the given C string if it is present in the given
- *   VSTD_String. Substring is only removed once.
+ *   _VSTD_String. Substring is only removed once.
  *
  * @param[in]
- *   string : VSTD_String to modify.
+ *   string : _VSTD_String to modify.
  * @param[in]
  *   sub : Null terminated C string to remove.
  *
  * @return
- *   Pointer to same VSTD_String, it may or may not be modified depending on
+ *   Pointer to same _VSTD_String, it may or may not be modified depending on
  *   whether or not the given C string is present in it.
  *
  * */
@@ -270,17 +270,17 @@ VSTD_STATIC _VSTD_String *vstd_string_remove(_VSTD_String *string,
  *
  * @description
  *   Removes n number of characters starting from the given index for the given
- *   VSTD_String.
+ *   _VSTD_String.
  *
  * @param[in]
- *   string : VSTD_String to modify.
+ *   string : _VSTD_String to modify.
  * @param[in]
  *   index : Starting index for removal.
  * @param[in]
  *   len : Number of characters to remove.
  *
  * @return
- *   Pointer to same modified VSTD_String.
+ *   Pointer to same modified _VSTD_String.
  *
  * */
 VSTD_STATIC _VSTD_String *vstd_string_remove_at(_VSTD_String *string,
@@ -293,17 +293,17 @@ VSTD_STATIC _VSTD_String *vstd_string_remove_at(_VSTD_String *string,
  *
  * @description
  *   Finds the first occurrence of the given C string inside of the given
- *   VSTD_String. Underlying implementation of this function just calls strstr
+ *   _VSTD_String. Underlying implementation of this function just calls strstr
  *   from standard library. Returns a NULL pointer if it fails.
  *
  * @param[in]
- *   string : VSTD_String to search.
+ *   string : _VSTD_String to search.
  * @param[in]
  *   sub : Null terminated C string to search for.
  *
  * @return
  *   Pointer to the start of the C string's first occurrence inside the given
- *   VSTD_String or a NULL pointer.
+ *   _VSTD_String or a NULL pointer.
  *
  * */
 VSTD_INLINE char *vstd_string_find_first(const _VSTD_String *string,
@@ -316,16 +316,16 @@ VSTD_INLINE char *vstd_string_find_first(const _VSTD_String *string,
  *
  * @description
  *   Finds the last occurrence of the given C string inside of the given
- *   VSTD_String. Returns a NULL pointer if it fails.
+ *   _VSTD_String. Returns a NULL pointer if it fails.
  *
  * @param[in]
- *   string : VSTD_String to search.
+ *   string : _VSTD_String to search.
  * @param[in]
  *   sub : Null terminated C string to search for.
  *
  * @return
  *   Pointer to the start of the C string's last occurrence inside the given
- *   VSTD_String or a NULL pointer.
+ *   _VSTD_String or a NULL pointer.
  *
  * */
 VSTD_STATIC char *vstd_string_find_last(const _VSTD_String *string,
@@ -337,14 +337,14 @@ VSTD_STATIC char *vstd_string_find_last(const _VSTD_String *string,
  *   vstd_string_compare
  *
  * @description
- *   Compares the given C string with the given VSTD_String. This function is
+ *   Compares the given C string with the given _VSTD_String. This function is
  *   only there for API consistency, underlying implementation of this function
  *   just calls strcmp thus behaviour is identical to that function. For more
  *   information about strcmp you can check:
  *   https://pubs.opengroup.org/onlinepubs/9699919799.2016edition/functions/strcmp.html
  *
  * @param[in]
- *   string : VSTD_String to compare.
+ *   string : _VSTD_String to compare.
  * @param[in]
  *   str : Null terminated C string to be compared with.
  *
@@ -361,10 +361,10 @@ VSTD_INLINE isize vstd_string_compare(const _VSTD_String *string,
  *   vstd_string_free
  *
  * @description
- *   Frees the memory allocated for given VSTD_String's underlying pointer.
+ *   Frees the memory allocated for given _VSTD_String's underlying pointer.
  *
  * @param[in]
- *   string : VSTD_String to free.
+ *   string : _VSTD_String to free.
  *
  * */
 VSTD_STATIC void vstd_string_free(_VSTD_String *string);
@@ -375,12 +375,12 @@ VSTD_STATIC void vstd_string_free(_VSTD_String *string);
  *   _vstd_string_realloc
  *
  * @description
- *   Doubles the given VSTD_String's capacity and reallocates the underlying
+ *   Doubles the given _VSTD_String's capacity and reallocates the underlying
  *   pointer. This is a helper function and it should only be used by the vstd
  *   library functions.
  *
  * @param[in]
- *   string : VSTD_String to reallocate.
+ *   string : _VSTD_String to reallocate.
  *
  * */
 VSTD_INLINE void _vstd_string_realloc(_VSTD_String *string);
@@ -526,5 +526,308 @@ VSTD_INLINE void _vstd_string_realloc(_VSTD_String *string) {
   string->cap *= 2;
   string->ptr = (char *)realloc(string->ptr, sizeof(char) * string->cap);
 }
+
+/*****************************************************************************
+ *
+ * @section
+ *   VSTD Vector
+ *
+ * */
+
+/*****************************************************************************
+ *
+ * @type:
+ *   _VSTD_Vector
+ *
+ * @description:
+ *   Vector implementation, this struct never allocates memory for itself, but
+ *   only for its underlying pointer. Whenever you're passing an instance of
+ *   this type its safe to pass it as it is to a function, as long as that
+ *   function doesn't modify the vector's pointer or other properties. Otherwise
+ *   you should pass it as a reference, or you may lose the underlying pointer.
+ *   Even though functions that are defined for _VSTD_Vector in this library
+ *   modifies those values, they are an exception to this rule, since they are
+ *   not ordinary functions but macros instead.
+ *
+ * */
+struct _VSTD_Vector {
+  void *ptr;
+  usize len;
+  usize cap;
+};
+
+#ifdef VSTD_VECTOR_STRIP_PREFIX
+#define Vector(type) struct _VSTD_Vector
+#else
+#define VSTD_Vector(type) struct _VSTD_Vector
+#endif
+
+#ifndef VSTD_VECTOR_INITIAL_CAP
+#define VSTD_VECTOR_INITIAL_CAP 1
+#endif
+
+/*****************************************************************************
+ *
+ * @macro
+ *   vstd_vector_new
+ *
+ * @description
+ *   Creates a new empty _VSTD_Vector object, this macro internally just calls
+ *   vstd_vector_with_capacity with VSTD_VECTOR_INITIAL_CAP as the argument.
+ *
+ * @param[in]
+ *   type : Type of the _VSTD_Vector's data.
+ *
+ * @return
+ *   New empty _VSTD_Vector with capacity of VSTD_VECTOR_INITIAL_CAP.
+ *
+ * */
+#define vstd_vector_new(type)                                                  \
+  vstd_vector_with_capacity(type, VSTD_VECTOR_INITIAL_CAP)
+
+/*****************************************************************************
+ *
+ * @macro
+ *   vstd_vector_with_capacity
+ *
+ * @description
+ *   Creates a new empty _VSTD_Vector object with the given capacity.
+ *
+ * @param[in]
+ *   type : Type of the _VSTD_Vector's data.
+ * @param[in]
+ *   capacity : Capacity of the new _VSTD_Vector.
+ *
+ * @return
+ *   New empty _VSTD_Vector with given capacity.
+ *
+ * */
+#define vstd_vector_with_capacity(type, capacity)                              \
+  (struct _VSTD_Vector) {                                                      \
+    .ptr = malloc(sizeof(type) * capacity), .cap = capacity, .len = 0          \
+  }
+
+/*****************************************************************************
+ *
+ * @macro
+ *   vstd_vector_from
+ *
+ * @description
+ *   Creates a new _VSTD_Vector containing the data in the initializer list.
+ *   Data is first assigned to a temporary variable then copied to the var.
+ *
+ * @param[in]
+ *   type : Type of the _VSTD_Vector's data.
+ * @param[in]
+ *   var : Name of the variable to assign the vector.
+ * @param[in]
+ *   ... : Initializer list
+ *
+ * @return
+ *   New _VSTD_Vector containing the data in the initializer list.
+ *
+ * */
+#define vstd_vector_from(type, var, ...)                                       \
+  (struct _VSTD_Vector){};                                                     \
+  {                                                                            \
+    type temp[] = __VA_ARGS__;                                                 \
+    var.ptr = malloc(sizeof(temp));                                            \
+    memcpy(var.ptr, temp, sizeof(temp));                                       \
+    var.cap = sizeof(temp) / sizeof(type);                                     \
+    var.len = var.cap;                                                         \
+  }                                                                            \
+  NULL
+
+/*****************************************************************************
+ *
+ * @macro
+ *   vstd_vector_clone
+ *
+ * @description
+ *   Clones the given _VSTD_Vector and assigns the clone to var.
+ *
+ * @param[in]
+ *   type : Type of the _VSTD_Vector's data.
+ * @param[in]
+ *   var : Name of the variable to assign the clone.
+ * @param[in]
+ *   other : _VSTD_Vector to clone.
+ *
+ * @return
+ *   New _VSTD_Vector identical to other.
+ *
+ * */
+#define vstd_vector_clone(type, var, other)                                    \
+  (struct _VSTD_Vector){};                                                     \
+  {                                                                            \
+    var.ptr = malloc(sizeof(type) * other.cap);                                \
+    memcpy(var.ptr, other.ptr, sizeof(type) * other.len);                      \
+    var.cap = other.cap;                                                       \
+    var.len = other.len;                                                       \
+  }                                                                            \
+  NULL
+
+/*****************************************************************************
+ *
+ * @macro
+ *   vstd_vector_get
+ *
+ * @description
+ *   Returns the item at the given index. This is the only way to access an
+ *   element from _VSTD_Vector since _VSTD_Vector needs to be casted to desired
+ *   type first.
+ *
+ * @param[in]
+ *   type : Type of the _VSTD_Vector's data.
+ * @param[in]
+ *   vec : _VSTD_Vector to retrieve the item from.
+ * @param[in]
+ *   index : Index of the item.
+ *
+ * @return
+ *   Pointer to item at given index.
+ *
+ * */
+#define vstd_vector_get(type, vec, index) ((type *)vec.ptr)[index]
+
+/*****************************************************************************
+ *
+ * @macro
+ *   vstd_vector_set
+ *
+ * @description
+ *   Replaces the item at the given index with the given item.
+ *
+ * @param[in]
+ *   type : Type of the _VSTD_Vector's data.
+ * @param[in]
+ *   vec : _VSTD_Vector to modify.
+ * @param[in]
+ *   index : Target index to replace.
+ * @param[in]
+ *   item : Item to replace with.
+ *
+ * */
+#define vstd_vector_set(type, vec, index, item) ((type *)vec.ptr)[index] = item
+
+/*****************************************************************************
+ *
+ * @macro
+ *   vstd_vector_push
+ *
+ * @description
+ *   Pushes a new item to the end of the given _VSTD_Vector.
+ *
+ * @param[in]
+ *   type : Type of the _VSTD_Vector's data.
+ * @param[in]
+ *   vec : _VSTD_Vector to modify.
+ * @param[in]
+ *   item : Item to add.
+ *
+ * */
+#define vstd_vector_push(type, vec, item)                                      \
+  {                                                                            \
+    if (vec.len + 1 >= vec.cap) {                                              \
+      vec.cap *= 2;                                                            \
+      vec.ptr = realloc(vec.ptr, vec.cap * sizeof(type));                      \
+    }                                                                          \
+    vstd_vector_set(type, vec, vec.len, item);                                 \
+    vec.len++;                                                                 \
+  }                                                                            \
+  NULL
+
+/*****************************************************************************
+ *
+ * @macro
+ *   vstd_vector_remove
+ *
+ * @description
+ *   Removes the item ad given index from _VSTD_Vector. If item is not at the
+ *   end of the _VSTD_Vector remaining items are shifted to left.
+ *
+ * @param[in]
+ *   type : Type of the _VSTD_Vector's data.
+ * @param[in]
+ *   vec : _VSTD_Vector to modify.
+ * @param[in]
+ *   index : Index to remove.
+ *
+ * */
+#define vstd_vector_remove(type, vec, index)                                   \
+  {                                                                            \
+    if (index != vec.len - 1) {                                                \
+      type *ptr = vec.ptr + index;                                             \
+      memmove(ptr, ptr + 1, (vec.len - (index - 1)) * sizeof(type));           \
+    }                                                                          \
+    vec.len--;                                                                 \
+  }                                                                            \
+  NULL
+
+/*****************************************************************************
+ *
+ * @macro
+ *   vstd_vector_iter
+ *
+ * @description
+ *   Helper function to easily iterate trough the whole _VSTD_Vector. In every
+ *   iteration you can access the current item from _$iter and current index
+ *   from _$i.
+ *
+ * @param[in]
+ *   type : Type of the _VSTD_Vector's data.
+ * @param[in]
+ *   vec : _VSTD_Vector to iterate.
+ * @param[in]
+ *   ... : A single function or a block of code to execute every iteration.
+ *
+ * */
+#define vstd_vector_iter(type, vec, ...)                                       \
+  for (type *_$iter = vec.ptr; _$iter < ((type *)vec.ptr) + vec.len;           \
+       ++_$iter) {                                                             \
+    usize _$i = ((void *)_$iter - vec.ptr) / sizeof(type);                     \
+    __VA_ARGS__;                                                               \
+  }                                                                            \
+  NULL
+
+/*****************************************************************************
+ *
+ * @macro
+ *   vstd_vector_clear
+
+ * @description
+ *   Set's given _VSTD_Vector's length to 0, basically soft resetting it. This
+ *   doesn't actually modify or free the underlying pointer.
+ *
+ * @param[in]
+ *   type : Type of the _VSTD_Vector's data.
+ * @param[in]
+ *   vec : _VSTD_Vector to clear.
+ *
+ * */
+#define vstd_vector_clear(type, vec) vec.len = 0
+
+/*****************************************************************************
+ *
+ * @macro
+ *   vstd_vector_free
+ *
+ * @description
+ *   Frees the underlying pointer of the given _VSTD_Vector.
+ *
+ * @param[in]
+ *   type : Type of the _VSTD_Vector's data.
+ * @param[in]
+ *   vec : _VSTD_Vector to free.
+ *
+ * */
+#define vstd_vector_free(type, vec)                                            \
+  {                                                                            \
+    free(vec.ptr);                                                             \
+    vec.ptr = NULL;                                                            \
+    vec.cap = 0;                                                               \
+    vec.len = 0;                                                               \
+  }                                                                            \
+  NULL
 
 #endif // VSTD_H_
