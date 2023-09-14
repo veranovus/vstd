@@ -1,5 +1,5 @@
 /*****************************************************************************
- * Copyright (C) 2023 veranovus <veranovus1@gmail.com>
+ * Copyright (C) 2023 veranovus
  *
  * This software is provided 'as-is', without any express or implied warranty.
  * In no event will the authors be held liable for any damages arising from the
@@ -76,7 +76,7 @@ struct _VSTD_String {
   usize cap;
 };
 
-#ifdef VSTD_STRIP_STRING_PREFIX
+#ifdef VSTD_STRING_STRIP_PREFIX
 typedef struct _VSTD_String String;
 #define _VSTD_String String
 #else
@@ -84,33 +84,133 @@ typedef struct _VSTD_String VSTD_String;
 #define _VSTD_String VSTD_String
 #endif
 
+#define _VSTD_STRING_INITIAL_CAP 1
+
 /*****************************************************************************
  *
- * @function:
- *   vstd_string_new();
+ * @function
+ *   vstd_string_new
  *
- * @description:
- *   Creates a new string object, this function internally calls
+ * @description
+ *   Creates a new empty VSTD_String object, this function internally calls
  *   vstd_string_with_capacity with _VSTD_STRING_INITIAL_CAP as the argument.
+ *
+ * @return
+ *   New empty VSTD_String with capacity of _VSTD_STRING_INITIAL_CAP.
  *
  * */
 VSTD_STATIC _VSTD_String vstd_string_new();
 
 /*****************************************************************************
  *
- * @function:
- *   vstd_string_with_capacity();
+ * @function
+ *   vstd_string_with_capacity
  *
- * @description:
- *   Creates a new string object with given capacity, memory is only allocated
- *   for the underlying pointer.
+ * @description
+ *   Creates a new empty VSTD_String object with given capacity, memory is only
+ *   allocated for the underlying pointer.
+ *
+ * @param[in]
+ *   cap : Capacity for the new VSTD_String.
+ *
+ * @return
+ *   New empty VSTD_String with the given capacity.
  *
  * */
 VSTD_STATIC _VSTD_String vstd_string_with_capacity(usize cap);
+
+/*****************************************************************************
+ *
+ * @function
+ *   vstd_string_from
+ *
+ * @description
+ *   Creates a new null terminated VSTD_String from given C string.
+ *
+ * @param[in]
+ *   str : Null terminated C string to copy from.
+ *
+ * @return
+ *   New null terminated VSTD_String with the same contents as the given C
+ *   string.
+ *
+ * */
 VSTD_STATIC _VSTD_String vstd_string_from(const char *str);
+
+/*****************************************************************************
+ *
+ * @function
+ *   vstd_string_clone
+ *
+ * @description
+ *   Clones the given VSTD_String and returns the clone.
+ *
+ * @param[in]
+ *   string : VSTD_String to clone.
+ *
+ * @return
+ *   New VSTD_String identical to the given VSTD_String.
+ *
+ * */
 VSTD_STATIC _VSTD_String vstd_string_clone(const _VSTD_String *string);
+
+/*****************************************************************************
+ *
+ * @function
+ *   vstd_string_format
+ *
+ * @description
+ *   Creates a new VSTD_String using the formatted contents.
+ *
+ * @param[in]
+ *   fmt : Null terminated C string specifying how to interpret the data.
+ * @param[in]
+ *   ... : Arguments specifying the data to format.
+ *
+ * @return
+ *   New VSTD_String with the formatted contents.
+ *
+ * */
 VSTD_STATIC _VSTD_String vstd_string_format(const char *fmt, ...);
+
+/*****************************************************************************
+ *
+ * @function
+ *   vstd_string_push
+ *
+ * @description
+ *   Adds the given character to the end of given VSTD_String, this function
+ *   may resize the given VSTD_String.
+ *
+ * @param[in]
+ *   string : VSTD_String to modify.
+ * @param[in]
+ *   c : Character to push.
+ *
+ * @return
+ *   Pointer to same modified VSTD_String.
+ *
+ * */
 VSTD_STATIC _VSTD_String *vstd_string_push(_VSTD_String *string, char c);
+
+/*****************************************************************************
+ *
+ * @function
+ *   vstd_string_push_str
+ *
+ * @description
+ *   Adds the C string to the end of given VSTD_String, this function
+ *   may resize the given VSTD_String.
+ *
+ * @param[in]
+ *   string : VSTD_String to modify.
+ * @param[in]
+ *   str : Null terminated C string to push.
+ *
+ * @return
+ *   Pointer to same modified VSTD_String.
+ *
+ * */
 VSTD_STATIC _VSTD_String *vstd_string_push_str(_VSTD_String *string,
                                                const char *str);
 VSTD_STATIC _VSTD_String *vstd_string_remove_at(_VSTD_String *string,
