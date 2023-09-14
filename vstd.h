@@ -84,10 +84,10 @@ typedef double f64;
  *
  * @description:
  *   String implementation, this struct never allocates memory for itself, but
- *   only for its underlying pointer. Whenever you're passing an instance of
- *   this type its safe to pass it as it is to a function, as long as that
- *   function doesn't modify the string's pointer or other properties. Otherwise
- *   you should pass it as a reference, or you may lose the underlying pointer.
+ *   only for its underlying pointer. When passing an instance of this type, its
+ *   safe to pass it as it is to a function, as long as that function doesn't
+ *   modify the string's pointer or other properties. Otherwise you should pass
+ *   it as a reference, or you may lose the underlying pointer.
  *
  * */
 struct _VSTD_String {
@@ -544,14 +544,14 @@ VSTD_INLINE void _vstd_string_realloc(_VSTD_String *string) {
  *
  * @description:
  *   Vector implementation, this struct never allocates memory for itself, but
- *   only for its underlying pointer. Whenever you're passing an instance of
- *   this type its safe to pass it as it is to a function, as long as that
- *   function doesn't modify the vector's pointer or other properties. Otherwise
- *   you should pass it as a reference, or you may lose the underlying pointer.
- *   Even though functions that are defined for _VSTD_Vector in this library
- *   modifies those values, they are an exception to this rule, since they are
- *   not ordinary functions but macros instead, and passing by reference to
- *   those macros will break them.
+ *   only for its underlying pointer. When passing an instance of this type its
+ *   safe to pass it as it is to a function, as long as that function doesn't
+ *   modify the vector's pointer or other properties. Otherwise you should pass
+ *   it as a reference, or you may lose the underlying pointer. Even though
+ *   functions that are defined for _VSTD_Vector in this library modifies those
+ *   values, they are an exception to this rule, since they are not ordinary
+ *   functions but macros instead, and passing by reference to those macros will
+ *   break them.
  *
  * */
 struct _VSTD_Vector {
@@ -865,9 +865,70 @@ struct _VSTD_Map {
 };
 
 #ifdef VSTD_MAP_STRIP_PREFIX
-#define Map(K, V) struct _VSTD_Map
+#define Map(k, v) struct _VSTD_Map
 #else
-#define VSTD_Map(K, V) struct _VSTD_Map
+#define VSTD_Map(k, v) struct _VSTD_Map
 #endif
+
+/*****************************************************************************
+ *
+ * @macro
+ *   vstd_map_new
+ *
+ * @description
+ *   Creates a new empty _VSTD_Map.
+ *
+ * @param[in]
+ *   k : Type of the keys stored in _VSTD_Map.
+ * @param[in]
+ *   v : Type of the values stored in _VSTD_Map.
+ * @param[in]
+ *   condition : Condition function that will be used to compare keys.
+ *
+ * @return
+ *   New empty _VSTD_Map.
+ *
+ * */
+#define vstd_map_new(k, v, condition)                                          \
+  (struct _VSTD_Map) {                                                         \
+    .keys = vstd_vector_new(k), .vals = vstd_vector_new(v),                    \
+    .func_ptr = condition, .cache = -1,                                        \
+  }
+
+/*****************************************************************************
+ *
+ * @macro
+ *   vstd_map_contains
+ *
+ * @description
+ *   Searches the given _VSTD_Map for given key and stores the result in the
+ *   given variable.
+ *
+ * @param[in]
+ *   k : Type of the keys stored in _VSTD_Map.
+ * @param[in]
+ *   v : Type of the values stored in _VSTD_Map.
+ * @param[in]
+ *   map : Map to search for the key.
+ * @param[in]
+ *   key : Key to search for.
+ * @param[out]
+ *   result : Reference to the variable that the result will be stored in.
+ *
+ * */
+#define vstd_map_contains(k, v, map, key, result)                              \
+  {                                                                            \
+    *(result) = false;                                                         \
+    map.cache = -1;                                                            \
+    for (k *_ptr = map.keys.ptr; _ptr < ((k *)map.keys.ptr) + map.keys.len;    \
+         ++_ptr) {                                                             \
+      if (((bool (*)(k *, k *))map.func_ptr)(_ptr, key)) {                     \
+        *(result) = true;                                                      \
+        map.cache = _ptr - ((k *)map.keys.ptr);                                \
+        break;                                                                 \
+      }                                                                        \
+    }                                                                          \
+  }                                                                            \
+  NULL
 
 #endif // VSTD_H_
