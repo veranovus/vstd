@@ -687,7 +687,7 @@ struct _VSTD_Vector {
  *   index : Index of the item.
  *
  * @return
- *   Pointer to item at given index.
+ *   Item at given index.
  *
  * */
 #define vstd_vector_get(type, vec, index) ((type *)vec.ptr)[index]
@@ -759,8 +759,8 @@ struct _VSTD_Vector {
 #define vstd_vector_remove(type, vec, index)                                   \
   {                                                                            \
     if (index != vec.len - 1) {                                                \
-      type *ptr = vec.ptr + index;                                             \
-      memmove(ptr, ptr + 1, (vec.len - (index - 1)) * sizeof(type));           \
+      type *ptr = ((type *)vec.ptr) + index;                                   \
+      memmove(ptr, ptr + 1, (vec.len - (index + 1)) * sizeof(type));           \
     }                                                                          \
     vec.len--;                                                                 \
   }                                                                            \
