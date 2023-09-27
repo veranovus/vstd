@@ -209,8 +209,8 @@ VSTD_STATIC _VSTD_String vstd_string_format(const char *fmt, ...);
  *   vstd_string_push
  *
  * @description
- *   Adds the given character to the end of given _VSTD_String, this function
- *   may resize the given _VSTD_String.
+ *   Adds a character to the end of given _VSTD_String, this function may resize
+ *   the supplied _VSTD_String.
  *
  * @param[in]
  *   string : _VSTD_String to modify.
@@ -250,8 +250,8 @@ VSTD_STATIC _VSTD_String *vstd_string_push_str(_VSTD_String *string,
  *   vstd_string_remove
  *
  * @description
- *   Tries to remove the given C string if it is present in the given
- *   _VSTD_String. Substring is only removed once.
+ *   Tries to remove a substring from the given _VSTD_String if it's present in
+ *   it. Only removes the first occurrence of the substring.
  *
  * @param[in]
  *   string : _VSTD_String to modify.
@@ -272,7 +272,7 @@ VSTD_STATIC _VSTD_String *vstd_string_remove(_VSTD_String *string,
  *   vstd_string_remove_at
  *
  * @description
- *   Removes n number of characters starting from the given index for the given
+ *   Removes n number of characters starting from the index from the given
  *   _VSTD_String.
  *
  * @param[in]
@@ -295,7 +295,7 @@ VSTD_STATIC _VSTD_String *vstd_string_remove_at(_VSTD_String *string,
  *   vstd_string_find_first
  *
  * @description
- *   Finds the first occurrence of the given C string inside of the given
+ *   Tries to find the first occurrence of the substring inside of the given
  *   _VSTD_String. Underlying implementation of this function just calls strstr
  *   from standard library. Returns a NULL pointer if it fails.
  *
@@ -305,7 +305,7 @@ VSTD_STATIC _VSTD_String *vstd_string_remove_at(_VSTD_String *string,
  *   sub : Null terminated C string to search for.
  *
  * @return
- *   Pointer to the start of the C string's first occurrence inside the given
+ *   Pointer to the start of the substring's first occurrence inside the given
  *   _VSTD_String or a NULL pointer.
  *
  * */
@@ -318,7 +318,7 @@ VSTD_INLINE char *vstd_string_find_first(const _VSTD_String *string,
  *   vstd_string_find_first
  *
  * @description
- *   Finds the last occurrence of the given C string inside of the given
+ *   Tries to find the last occurrence of the substring inside of the given
  *   _VSTD_String. Returns a NULL pointer if it fails.
  *
  * @param[in]
@@ -327,7 +327,7 @@ VSTD_INLINE char *vstd_string_find_first(const _VSTD_String *string,
  *   sub : Null terminated C string to search for.
  *
  * @return
- *   Pointer to the start of the C string's last occurrence inside the given
+ *   Pointer to the start of the substring's last occurrence inside the given
  *   _VSTD_String or a NULL pointer.
  *
  * */
@@ -340,9 +340,9 @@ VSTD_STATIC char *vstd_string_find_last(const _VSTD_String *string,
  *   vstd_string_compare
  *
  * @description
- *   Compares the given C string with the given _VSTD_String. This function is
- *   only there for API consistency, underlying implementation of this function
- *   just calls strcmp thus, behaviour is identical to that function. For more
+ *   Compares the C string with the given _VSTD_String. This function is only
+ *   there for API consistency, underlying implementation of this function just
+ *   calls strcmp thus, behaviour is identical to that function. For more
  *   information about strcmp you can check:
  *   https://pubs.opengroup.org/onlinepubs/9699919799.2016edition/functions/strcmp.html
  *
@@ -379,7 +379,7 @@ VSTD_STATIC void vstd_string_free(_VSTD_String *string);
  *
  * @description
  *   Doubles the given _VSTD_String's capacity and reallocates the underlying
- *   pointer. This is a helper function and it should only be used by the vstd
+ *   pointer. This is a helper function and it's only meant to be used the vstd
  *   library functions.
  *
  * @param[in]
@@ -702,7 +702,8 @@ struct _VSTD_Vector {
  *   vstd_vector_set
  *
  * @description
- *   Replaces the item at the given index with the given item.
+ *   Replaces the item at the given index with the item. This macro doesn't
+ *   modify the _VSTD_Vector but only the item at given index.
  *
  * @param[in]
  *   type : Type of the _VSTD_Vector's data.
@@ -722,7 +723,8 @@ struct _VSTD_Vector {
  *   vstd_vector_push
  *
  * @description
- *   Pushes a new item to the end of the given _VSTD_Vector.
+ *   Pushes a new item to the end of the given _VSTD_Vector. This macro may
+ *   resize the _VSTD_Vector.
  *
  * @param[in]
  *   type : Type of the _VSTD_Vector's data.
@@ -750,7 +752,7 @@ struct _VSTD_Vector {
  *
  * @description
  *   Removes the item at the given index from _VSTD_Vector. If item is not at
- *   the end of the _VSTD_Vector remaining items are shifted to left.
+ *   the end of the _VSTD_Vector, remaining items are shifted to left.
  *
  * @param[in]
  *   type : Type of the _VSTD_Vector's data.
@@ -777,8 +779,8 @@ struct _VSTD_Vector {
  *
  * @description
  *   Helper function to easily iterate trough the length of the _VSTD_Vector.
- *   In every iteration you can access the current item from _$iter and current
- *   index from _$i.
+ *   In every iteration it is possible to access the current item from _$iter
+ *   and current index from _$i.
  *
  * @param[in]
  *   type : Type of the _VSTD_Vector's data.
@@ -800,7 +802,7 @@ struct _VSTD_Vector {
  *
  * @macro
  *   vstd_vector_clear
-
+ *
  * @description
  *   Set's given _VSTD_Vector's length to 0, basically soft resetting it. This
  *   doesn't actually modify or free the underlying pointer.
@@ -850,11 +852,11 @@ struct _VSTD_Vector {
  *
  * @description
  *   Map implementation, this type doesn't allocate any memory for itself, but
- *   its underlying _VSTD_Vector's allocate memory for their pointers. Thus it's
- *   safe to pass this type to functions as it is, as long as said function
+ *   its underlying _VSTD_Vector's allocate memory for their pointers. Thus,
+ *   it's safe to pass this type to functions as it is, as long as said function
  *   doesn't alter any of the properties of _VSTD_Map or its _VSTD_Vector's.
- *   Otherwise you should pass it as reference or you may lose the underlying
- *   pointers of the _VSTD_Vector's.
+ *   Otherwise it should be passed as a reference or may result in the lose of
+ *   the underlying pointers.
  *
  * */
 struct _VSTD_Map {
@@ -901,8 +903,8 @@ struct _VSTD_Map {
  *   vstd_map_contains
  *
  * @description
- *   Searches the given _VSTD_Map for given key and stores the result in the
- *   given variable.
+ *   Searches the supplied _VSTD_Map for the given key and stores the result in
+ *   a variable.
  *
  * @param[in]
  *   k : Type of the keys stored in _VSTD_Map.
@@ -930,5 +932,433 @@ struct _VSTD_Map {
     }                                                                          \
   }                                                                            \
   NULL
+
+/*****************************************************************************
+ *
+ * @macro
+ *   vstd_map_set
+ *
+ * @description
+ *   Set's the value for the key to the supplied item. If the key is already
+ *   present in the given _VSTD_Map, item is just replaced with the new value,
+ *   if not both the key and the item are added to respective _VSTD_Vectors.
+ *
+ * @param[in]
+ *   k : Type of the keys stored in _VSTD_Map.
+ * @param[in]
+ *   v : Type of the values stored in _VSTD_Map.
+ * @param[in]
+ *   map : Map to set the key and the value.
+ * @param[in]
+ *   key : Key.
+ * @param[in]
+ *   value : Value.
+ *
+ * */
+#define vstd_map_set(k, v, map, key, value)                                    \
+  {                                                                            \
+    bool exists;                                                               \
+    vstd_map_contains(k, v, map, &key, &exists);                               \
+    if (!exists) {                                                             \
+      vstd_vector_push(k, map.keys, key);                                      \
+      vstd_vector_push(v, map.vals, value);                                    \
+    } else {                                                                   \
+      vstd_vector_set(v, map.vals, map.cache, value);                          \
+    }                                                                          \
+  }                                                                            \
+  NULL
+
+/*****************************************************************************
+ *
+ * @macro
+ *   vstd_map_get
+ *
+ * @description
+ *   Tries to retrieve a value from the given _VSTD_Map. If successful a pointer
+ *   to value is assigned to var, if not var is set to NULL.
+ *
+ * @param[in]
+ *   k : Type of the keys stored in _VSTD_Map.
+ * @param[in]
+ *   v : Type of the values stored in _VSTD_Map.
+ * @param[in]
+ *   map : Map to get the value from.
+ * @param[in]
+ *   key : Key to access.
+ * @param[out]
+ *   var : Variable to store the value.
+ *
+ * */
+#define vstd_map_get(k_t, v_t, map, k, out)                                    \
+  {                                                                            \
+    bool exists;                                                               \
+    vstd_map_contains(k_t, v_t, map, &k, &exists);                             \
+    if (!exists) {                                                             \
+      out = NULL;                                                              \
+    } else {                                                                   \
+      out = &(vstd_vector_get(v_t, map.vals, map.cache));                      \
+    }                                                                          \
+  }                                                                            \
+  NULL
+
+/*****************************************************************************
+ *
+ * @macro
+ *   vstd_map_remove
+ *
+ * @description
+ *   Tries to remove the key and its associated value from the given _VSTD_Map.
+ *
+ * @param[in]
+ *   k : Type of the keys stored in _VSTD_Map.
+ * @param[in]
+ *   v : Type of the values stored in _VSTD_Map.
+ * @param[in]
+ *   map : Map to remove the key from.
+ * @param[in]
+ *   key : Key to remove.
+ *
+ * */
+#define vstd_map_remove(k, v, map, key)                                        \
+  {                                                                            \
+    bool exists;                                                               \
+    vstd_map_contains(k, v, map, &key, &exists);                               \
+    if (exists) {                                                              \
+      vstd_vector_remove(k, map.keys, map.cache);                              \
+      vstd_vector_remove(v, map.vals, map.cache);                              \
+    }                                                                          \
+  }                                                                            \
+  NULL
+
+/*****************************************************************************
+ *
+ * @macro
+ *   vstd_map_remove
+ *
+ * @description
+ *   Helper function to easily iterate trough the all the keys and values stored
+ *   in a _VSTD_Map. In every iteration it is possible to access the current key
+ *   and value from _$iter and current index from _$i.
+ *
+ * @param[in]
+ *   k : Type of the keys stored in _VSTD_Map.
+ * @param[in]
+ *   v : Type of the values stored in _VSTD_Map.
+ * @param[in]
+ *   map : _VSTD_Map to iterate.
+ * @param[in]
+ *   ... : A single function or a block of code to execute every iteration.
+ *
+ * */
+#define vstd_map_iter(k, v, map, ...)                                          \
+  {                                                                            \
+    struct _VSTDMapPair {                                                      \
+      k *key;                                                                  \
+      v *val;                                                                  \
+    };                                                                         \
+    for (usize _$i = 0; _$i < map.keys.len; ++_$i) {                           \
+      struct _VSTDMapPair _$iter = (struct _VSTDMapPair){                      \
+          .key = &(vstd_vector_get(k, map.keys, _$i)),                         \
+          .val = &(vstd_vector_get(v, map.vals, _$i)),                         \
+      };                                                                       \
+      __VA_ARGS__;                                                             \
+    }                                                                          \
+  }                                                                            \
+  NULL
+
+/*****************************************************************************
+ *
+ * @macro
+ *   vstd_map_clear
+ *
+ * @description
+ *   Set's given _VSTD_Map's underlying _VSTD_Vector's lengths to 0, basically
+ *   soft resetting them. This doesn't actually modify or free the underlying
+ *   pointers.
+ *
+ * @param[in]
+ *   k : Type of the keys stored in _VSTD_Map.
+ * @param[in]
+ *   v : Type of the values stored in _VSTD_Map.
+ * @param[in]
+ *   map : _VSTD_Map to clear.
+ *
+ * */
+#define vstd_map_clear(k, v, map)                                              \
+  {                                                                            \
+    vstd_vector_clear(k, map.keys);                                            \
+    vstd_vector_clear(v, map.vals);                                            \
+    map.cache = -1;                                                            \
+  }
+
+/*****************************************************************************
+ *
+ * @macro
+ *   vstd_map_free
+ *
+ * @description
+ *   Frees all the memory allocated for the _VSTD_Map by freeing its underlying
+ *   _VSTD_Vectors.
+ *
+ * @param[in]
+ *   k : Type of the keys stored in _VSTD_Map.
+ * @param[in]
+ *   v : Type of the values stored in _VSTD_Map.
+ * @param[in]
+ *   map : _VSTD_Map to free.
+ *
+ * */
+#define vstd_map_free(k, v, map)                                               \
+  {                                                                            \
+    vstd_vector_free(k, map.keys);                                             \
+    vstd_vector_free(v, map.vals);                                             \
+    map.cache = -1;                                                            \
+  }                                                                            \
+  NULL
+
+/*****************************************************************************
+ *
+ * @section
+ *   VSTD Map Predefined Condition Functions
+ *
+ * @description
+ *   Predefined functions that can be supplied to a _VSTD_Map as a compare
+ *   function for its keys.
+ *
+ * */
+
+#ifndef VSTD_MAP_NO_PREDEFINED_CONDITIONS
+VSTD_STATIC bool vstd_map_condition_isize(const isize *a, const isize *b) {
+  return *(a) == *(b);
+}
+
+VSTD_STATIC bool vstd_map_condition_usize(const usize *a, const usize *b) {
+  return *(a) == *(b);
+}
+
+VSTD_STATIC bool vstd_map_condition_string(const _VSTD_String *a,
+                                           const _VSTD_String *b) {
+  return vstd_string_compare(a, b->ptr) == VSTD_STRING_EQUAL;
+}
+
+VSTD_STATIC bool vstd_map_condition_void(const void **a, const void **b) {
+  return *a == *b;
+}
+#endif
+
+/*****************************************************************************
+ *
+ * @section
+ *   VSTD FS
+ *
+ * @description
+ *   Utilities related to files and file management.
+ *
+ * */
+
+/*****************************************************************************
+ *
+ * @function
+ *   vstd_fs_read_file
+ *
+ * @description
+ *   Reads the contents of the file at given path into a _VSTD_String. Returns a
+ *   NULL _VSTD_String if it fails.
+ *
+ * @param[in]
+ *   path : Path to the file to read.
+ *
+ * @return
+ *   _VSTD_Vector with the contents of the file, or a NULL _VSTD_Vector.
+ *
+ * */
+VSTD_STATIC _VSTD_String vstd_fs_read_file(const char *path) {
+  /* TODO: Potential Improvement
+   * Maybe change "r" to "rb" to make this function more general purpose.
+   */
+  FILE *f = fopen(path, "r");
+
+  if (!f) {
+#ifdef DEBUG
+    fprintf(stderr, "Failed to open file at `%s` to read.\n", path);
+    perror("ERROR @vstd_fs_read_file");
+#endif
+    return (_VSTD_String){NULL, 0, 0};
+  }
+
+  fseek(f, 0, SEEK_END);
+  usize size = ftell(f);
+  fseek(f, 0, SEEK_SET);
+
+  _VSTD_String buff = vstd_string_with_capacity(size + 1);
+
+  usize read = fread(buff.ptr, size, 1, f);
+  if (read != 1) {
+#ifdef DEBUG
+    fprintf(stderr, "Failed to read file at `%s`.\n", path);
+    perror("ERROR @vstd_fs_read_file");
+#endif
+    return (_VSTD_String){NULL, 0, 0};
+  }
+  fclose(f);
+
+  buff.len = size;
+  buff.ptr[buff.len] = '\0';
+
+  return buff;
+}
+
+/*****************************************************************************
+ *
+ * @function
+ *   vstd_fs_read_dir
+ *
+ * @description
+ *   Reads the contents of the directory at the given path, stores the names of
+ *   the every item in a _VSTD_Vector. Returns a NULL _VSTD_Vector if it fails.
+ *
+ * @param[in]
+ *   path : Path to the directory to read.
+ *
+ * @return
+ *   _VSTD_Vector stroring the names of the directory' contents, or a NULL
+ *   _VSTD_Vector.
+ *
+ * */
+VSTD_STATIC VSTD_Vector(String) vstd_fs_read_dir(const char *path) {
+  DIR *d;
+  struct dirent *dir;
+
+  d = opendir(path);
+  if (!d) {
+#ifdef DEBUG
+    fprintf(stderr, "ERROR: Failed to read directory at `%s`\n.", path);
+    perror("ERROR @vstd_fs_read_dir");
+#endif
+    return (struct _VSTD_Vector){};
+  }
+
+  VSTD_Vector(_VSTD_String) vec = vstd_vector_new(_VSTD_String);
+  while ((dir = readdir(d)) != NULL) {
+    vstd_vector_push(_VSTD_String, vec, vstd_string_from(dir->d_name));
+  }
+  closedir(d);
+
+  return vec;
+}
+
+/*****************************************************************************
+ *
+ * @function
+ *   vstd_fs_write_file
+ *
+ * @description
+ *   Writes the contents of the C string to the file at the given path, creates
+ *   the file it doesn't already exists.
+ *
+ * @param[in]
+ *   path : Path to the file to write.
+ * @param[in]
+ *   content : Data to write into the target file.
+ *
+ * */
+VSTD_STATIC usize vstd_fs_write_file(const char *path, const char *content) {
+  FILE *f = fopen(path, "w");
+
+  if (!f) {
+#ifdef DEBUG
+    fprintf(stderr, "Failed to open file at `%s` to write.\n", path);
+    perror("ERROR @vstd_fs_write_file");
+#endif
+    return errno;
+  }
+
+  i32 rc = fputs(content, f);
+  if (rc == EOF) {
+#ifdef DEBUG
+    fprintf(stderr, "Failed to write to file at `%s`.\n", path);
+    perror("ERROR @vstd_fs_write_file");
+#endif
+    return errno;
+  }
+
+  fclose(f);
+  return 0;
+}
+
+/*****************************************************************************
+ *
+ * @function
+ *   vstd_fs_create_dir
+ *
+ * @description
+ *   Tries to create a new directory at the given path, returns the errno if it
+ *   fails, and returns 0 if it manages to create the directory.
+ *
+ * @param[in]
+ *   path : Path for the directory to create.
+ *
+ * @return
+ *   0 if it successfully creates a directory and errno if it fails.
+ *
+ * */
+VSTD_STATIC usize vstd_fs_create_dir(const char *path) {
+  if (mkdir(path, S_IRWXU | S_IRWXG | S_IRWXO) == -1) {
+#ifdef DEBUG
+    fprintf(stderr, "Failed to create directory at `%s`.\n", path);
+    perror("ERROR @vstd_fs_create_dir");
+#endif
+    return errno;
+  }
+
+  return 0;
+}
+
+/*****************************************************************************
+ *
+ * @section
+ *   VSTD IO
+ *
+ * @description
+ *   Utilities related to input and output.
+ *
+ * */
+
+/*****************************************************************************
+ *
+ * @function
+ *   vstd_io_read_line
+ *
+ * @description
+ *   Reads n number of characters from the stdin into a _VSTD_String, stops when
+ *   it encounters either a new line character or EOF.
+ *
+ * @param[in]
+ *   max_char : Maximum number of characters to read from stdin.
+ *
+ * @return
+ *   _VSTD_String containing the data read.
+ *
+ * */
+VSTD_STATIC _VSTD_String vstd_io_read_line(usize max_char) {
+  // FIXME: Consider Windows new line character `\r\n` too.
+
+  _VSTD_String line = vstd_string_with_capacity(max_char);
+
+  fgets(line.ptr, (i32)max_char, stdin);
+
+  usize len = 0;
+  for (char *ptr = line.ptr; ptr < line.ptr + line.cap; ++ptr) {
+    if (*ptr == '\n' || *ptr == '\0') {
+      len = ptr - line.ptr;
+      break;
+    }
+  }
+
+  line.len = len;
+  line.ptr[line.len] = '\0';
+
+  return line;
+}
 
 #endif // VSTD_H_
