@@ -764,7 +764,7 @@ struct _VSTD_Vector {
  * */
 #define vstd_vector_remove(type, vec, index)                                   \
   {                                                                            \
-    if (index != vec.len - 1) {                                                \
+    if (index != ((isize)vec.len - 1)) {                                       \
       type *ptr = ((type *)vec.ptr) + index;                                   \
       memmove(ptr, ptr + 1, (vec.len - (index + 1)) * sizeof(type));           \
     }                                                                          \
