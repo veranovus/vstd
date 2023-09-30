@@ -590,7 +590,9 @@ struct _VSTD_Vector {
  *
  * */
 #define vstd_vector_new(type)                                                  \
-  vstd_vector_with_capacity(type, VSTD_VECTOR_INITIAL_CAP)
+  do {                                                                         \
+    vstd_vector_with_capacity(type, VSTD_VECTOR_INITIAL_CAP);                  \
+  } while (0)
 
 /*****************************************************************************
  *
@@ -637,14 +639,13 @@ struct _VSTD_Vector {
  * */
 #define vstd_vector_from(type, var, ...)                                       \
   (struct _VSTD_Vector){};                                                     \
-  {                                                                            \
+  do {                                                                         \
     type temp[] = __VA_ARGS__;                                                 \
     var.ptr = malloc(sizeof(temp));                                            \
     memcpy(var.ptr, temp, sizeof(temp));                                       \
     var.cap = sizeof(temp) / sizeof(type);                                     \
     var.len = var.cap;                                                         \
-  }                                                                            \
-  NULL
+  } while (0)
 
 /*****************************************************************************
  *
@@ -668,13 +669,12 @@ struct _VSTD_Vector {
  * */
 #define vstd_vector_clone(type, var, other)                                    \
   (struct _VSTD_Vector){};                                                     \
-  {                                                                            \
+  do {                                                                         \
     var.ptr = malloc(sizeof(type) * other.cap);                                \
     memcpy(var.ptr, other.ptr, sizeof(type) * other.len);                      \
     var.cap = other.cap;                                                       \
     var.len = other.len;                                                       \
-  }                                                                            \
-  NULL
+  } while (0)
 
 /*****************************************************************************
  *
@@ -718,7 +718,10 @@ struct _VSTD_Vector {
  *   item : Item to replace with.
  *
  * */
-#define vstd_vector_set(type, vec, index, item) ((type *)vec.ptr)[index] = item
+#define vstd_vector_set(type, vec, index, item)                                \
+  do {                                                                         \
+    ((type *)vec.ptr)[index] = item                                            \
+  } while (0)
 
 /*****************************************************************************
  *
@@ -738,15 +741,14 @@ struct _VSTD_Vector {
  *
  * */
 #define vstd_vector_push(type, vec, item)                                      \
-  {                                                                            \
+  do {                                                                         \
     if (vec.len + 1 >= vec.cap) {                                              \
       vec.cap *= 2;                                                            \
       vec.ptr = realloc(vec.ptr, vec.cap * sizeof(type));                      \
     }                                                                          \
     vstd_vector_set(type, vec, vec.len, item);                                 \
     vec.len++;                                                                 \
-  }                                                                            \
-  NULL
+  } while (0)
 
 /*****************************************************************************
  *
@@ -766,14 +768,13 @@ struct _VSTD_Vector {
  *
  * */
 #define vstd_vector_remove(type, vec, index)                                   \
-  {                                                                            \
+  do {                                                                         \
     if (index != ((isize)vec.len - 1)) {                                       \
       type *ptr = ((type *)vec.ptr) + index;                                   \
       memmove(ptr, ptr + 1, (vec.len - (index + 1)) * sizeof(type));           \
     }                                                                          \
     vec.len--;                                                                 \
-  }                                                                            \
-  NULL
+  } while (0)
 
 /*****************************************************************************
  *
@@ -794,12 +795,15 @@ struct _VSTD_Vector {
  *
  * */
 #define vstd_vector_iter(type, vec, ...)                                       \
-  for (type *_$iter = vec.ptr; _$iter < ((type *)vec.ptr) + vec.len;           \
-       ++_$iter) {                                                             \
-    usize _$i = ((void *)_$iter - vec.ptr) / sizeof(type);                     \
-    __VA_ARGS__;                                                               \
-  }                                                                            \
-  NULL
+  do {                                                                         \
+    for (type *_$iter = vec.ptr; _$iter < ((type *)vec.ptr) + vec.len;         \
+         ++_$iter) {                                                           \
+      usize _$i = ((void *)_$iter - vec.ptr) / sizeof(type);                   \
+      __VA_ARGS__;                                                             \
+      (void)(_$i);                                                             \
+      (void)(_$iter);                                                          \
+    }                                                                          \
+  } while (0)
 
 /*****************************************************************************
  *
@@ -816,7 +820,10 @@ struct _VSTD_Vector {
  *   vec : _VSTD_Vector to clear.
  *
  * */
-#define vstd_vector_clear(type, vec) vec.len = 0
+#define vstd_vector_clear(type, vec)                                           \
+  do {                                                                         \
+    vec.len = 0                                                                \
+  } while (0)
 
 /*****************************************************************************
  *
@@ -833,13 +840,12 @@ struct _VSTD_Vector {
  *
  * */
 #define vstd_vector_free(type, vec)                                            \
-  {                                                                            \
+  do {                                                                         \
     free(vec.ptr);                                                             \
     vec.ptr = NULL;                                                            \
     vec.cap = 0;                                                               \
     vec.len = 0;                                                               \
-  }                                                                            \
-  NULL
+  } while (0)
 
 /*****************************************************************************
  *
@@ -922,7 +928,7 @@ struct _VSTD_Map {
  *
  * */
 #define vstd_map_contains(k, v, map, key, result)                              \
-  {                                                                            \
+  do {                                                                         \
     *(result) = false;                                                         \
     map.cache = -1;                                                            \
     for (k *_ptr = map.keys.ptr; _ptr < ((k *)map.keys.ptr) + map.keys.len;    \
@@ -933,8 +939,7 @@ struct _VSTD_Map {
         break;                                                                 \
       }                                                                        \
     }                                                                          \
-  }                                                                            \
-  NULL
+  } while (0)
 
 /*****************************************************************************
  *
@@ -959,7 +964,7 @@ struct _VSTD_Map {
  *
  * */
 #define vstd_map_set(k, v, map, key, value)                                    \
-  {                                                                            \
+  do {                                                                         \
     bool exists;                                                               \
     vstd_map_contains(k, v, map, &key, &exists);                               \
     if (!exists) {                                                             \
@@ -968,8 +973,7 @@ struct _VSTD_Map {
     } else {                                                                   \
       vstd_vector_set(v, map.vals, map.cache, value);                          \
     }                                                                          \
-  }                                                                            \
-  NULL
+  } while (0)
 
 /*****************************************************************************
  *
@@ -992,17 +996,16 @@ struct _VSTD_Map {
  *   var : Variable to store the value.
  *
  * */
-#define vstd_map_get(k_t, v_t, map, k, out)                                    \
-  {                                                                            \
+#define vstd_map_get(k, v, map, key, out)                                      \
+  do {                                                                         \
     bool exists;                                                               \
-    vstd_map_contains(k_t, v_t, map, &k, &exists);                             \
+    vstd_map_contains(k, v, map, &key, &exists);                               \
     if (!exists) {                                                             \
       out = NULL;                                                              \
     } else {                                                                   \
-      out = &(vstd_vector_get(v_t, map.vals, map.cache));                      \
+      out = &(vstd_vector_get(v, map.vals, map.cache));                        \
     }                                                                          \
-  }                                                                            \
-  NULL
+  } while (0)
 
 /*****************************************************************************
  *
@@ -1023,15 +1026,14 @@ struct _VSTD_Map {
  *
  * */
 #define vstd_map_remove(k, v, map, key)                                        \
-  {                                                                            \
+  do {                                                                         \
     bool exists;                                                               \
     vstd_map_contains(k, v, map, &key, &exists);                               \
     if (exists) {                                                              \
       vstd_vector_remove(k, map.keys, map.cache);                              \
       vstd_vector_remove(v, map.vals, map.cache);                              \
     }                                                                          \
-  }                                                                            \
-  NULL
+  } while (0)
 
 /*****************************************************************************
  *
@@ -1054,7 +1056,7 @@ struct _VSTD_Map {
  *
  * */
 #define vstd_map_iter(k, v, map, ...)                                          \
-  {                                                                            \
+  do {                                                                         \
     struct _VSTDMapPair {                                                      \
       k *key;                                                                  \
       v *val;                                                                  \
@@ -1065,9 +1067,10 @@ struct _VSTD_Map {
           .val = &(vstd_vector_get(v, map.vals, _$i)),                         \
       };                                                                       \
       __VA_ARGS__;                                                             \
+      (void)(_$i);                                                             \
+      (void)(_$iter);                                                          \
     }                                                                          \
-  }                                                                            \
-  NULL
+  } while (0)
 
 /*****************************************************************************
  *
@@ -1088,11 +1091,11 @@ struct _VSTD_Map {
  *
  * */
 #define vstd_map_clear(k, v, map)                                              \
-  {                                                                            \
+  do {                                                                         \
     vstd_vector_clear(k, map.keys);                                            \
     vstd_vector_clear(v, map.vals);                                            \
     map.cache = -1;                                                            \
-  }
+  } while (0)
 
 /*****************************************************************************
  *
@@ -1112,12 +1115,11 @@ struct _VSTD_Map {
  *
  * */
 #define vstd_map_free(k, v, map)                                               \
-  {                                                                            \
+  do {                                                                         \
     vstd_vector_free(k, map.keys);                                             \
     vstd_vector_free(v, map.vals);                                             \
     map.cache = -1;                                                            \
-  }                                                                            \
-  NULL
+  } while (0)
 
 /*****************************************************************************
  *
