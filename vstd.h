@@ -866,7 +866,7 @@ struct _VSTD_Map {
   struct _VSTD_Vector keys;
   struct _VSTD_Vector vals;
   void *func_ptr;
-  isize cache;
+  iptr cache;
 };
 
 #ifdef VSTD_MAP_STRIP_PREFIX
@@ -927,9 +927,9 @@ struct _VSTD_Map {
     map.cache = -1;                                                            \
     for (k *_ptr = map.keys.ptr; _ptr < ((k *)map.keys.ptr) + map.keys.len;    \
          ++_ptr) {                                                             \
-      if (((bool (*)(k *, k *))map.func_ptr)(_ptr, key)) {                     \
+      if (((bool (*)(k, k))map.func_ptr)(*_ptr, key)) {                        \
         *(result) = true;                                                      \
-        map.cache = _ptr - ((k *)map.keys.ptr);                                \
+        map.cache = (iptr)_ptr - (iptr)map.keys.ptr;                           \
         break;                                                                 \
       }                                                                        \
     }                                                                          \
@@ -960,7 +960,7 @@ struct _VSTD_Map {
 #define vstd_map_set(k, v, map, key, value)                                    \
   do {                                                                         \
     bool exists;                                                               \
-    vstd_map_contains(k, v, map, &key, &exists);                               \
+    vstd_map_contains(k, v, map, key, &exists);                                \
     if (!exists) {                                                             \
       vstd_vector_push(k, (&map.keys), key);                                   \
       vstd_vector_push(v, (&map.vals), value);                                 \
@@ -993,7 +993,7 @@ struct _VSTD_Map {
 #define vstd_map_get(k, v, map, key, out)                                      \
   do {                                                                         \
     bool exists;                                                               \
-    vstd_map_contains(k, v, map, &key, &exists);                               \
+    vstd_map_contains(k, v, map, key, &exists);                                \
     if (!exists) {                                                             \
       out = NULL;                                                              \
     } else {                                                                   \
@@ -1022,7 +1022,7 @@ struct _VSTD_Map {
 #define vstd_map_remove(k, v, map, key)                                        \
   do {                                                                         \
     bool exists;                                                               \
-    vstd_map_contains(k, v, map, &key, &exists);                               \
+    vstd_map_contains(k, v, map, key, &exists);                                \
     if (exists) {                                                              \
       vstd_vector_remove(k, (&map.keys), map.cache);                           \
       vstd_vector_remove(v, (&map.vals), map.cache);                           \
