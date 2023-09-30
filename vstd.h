@@ -1239,7 +1239,7 @@ VSTD_STATIC VSTD_Vector(String) vstd_fs_read_dir(const char *path) {
 
   VSTD_Vector(_VSTD_String) vec = vstd_vector_new(_VSTD_String);
   while ((dir = readdir(d)) != NULL) {
-    vstd_vector_push(_VSTD_String, vec, vstd_string_from(dir->d_name));
+    vstd_vector_push(_VSTD_String, (&vec), vstd_string_from(dir->d_name));
   }
   closedir(d);
 
