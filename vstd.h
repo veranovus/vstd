@@ -550,11 +550,7 @@ VSTD_INLINE void _vstd_string_realloc(_VSTD_String *string) {
  *   only for its underlying pointer. When passing an instance of this type its
  *   safe to pass it as it is to a function, as long as that function doesn't
  *   modify the vector's pointer or other properties. Otherwise you should pass
- *   it as a reference, or you may lose the underlying pointer. Even though
- *   functions that are defined for _VSTD_Vector in this library modifies those
- *   values, they are an exception to this rule since they are not ordinary
- *   functions but macros instead, and passing by reference to those macros will
- *   break them.
+ *   it as a reference, or you may lose the underlying pointer.
  *
  * */
 struct _VSTD_Vector {
@@ -709,7 +705,7 @@ struct _VSTD_Vector {
  * @param[in]
  *   type : Type of the _VSTD_Vector's data.
  * @param[in]
- *   vec : _VSTD_Vector to modify.
+ *   vec : Pointer to _VSTD_Vector to modify.
  * @param[in]
  *   index : Target index to replace.
  * @param[in]
@@ -718,7 +714,7 @@ struct _VSTD_Vector {
  * */
 #define vstd_vector_set(type, vec, index, item)                                \
   do {                                                                         \
-    ((type *)vec.ptr)[index] = item;                                           \
+    ((type *)vec->ptr)[index] = item;                                          \
   } while (0)
 
 /*****************************************************************************
@@ -733,19 +729,19 @@ struct _VSTD_Vector {
  * @param[in]
  *   type : Type of the _VSTD_Vector's data.
  * @param[in]
- *   vec : _VSTD_Vector to modify.
+ *   vec : Pointer to _VSTD_Vector to modify.
  * @param[in]
  *   item : Item to add.
  *
  * */
 #define vstd_vector_push(type, vec, item)                                      \
   do {                                                                         \
-    if (vec.len + 1 >= vec.cap) {                                              \
-      vec.cap *= 2;                                                            \
-      vec.ptr = realloc(vec.ptr, vec.cap * sizeof(type));                      \
+    if (vec->len + 1 >= vec->cap) {                                            \
+      vec->cap *= 2;                                                           \
+      vec->ptr = realloc(vec->ptr, vec->cap * sizeof(type));                   \
     }                                                                          \
-    vstd_vector_set(type, vec, vec.len, item);                                 \
-    vec.len++;                                                                 \
+    vstd_vector_set(type, vec, vec->len, item);                                \
+    vec->len++;                                                                \
   } while (0)
 
 /*****************************************************************************
@@ -760,18 +756,18 @@ struct _VSTD_Vector {
  * @param[in]
  *   type : Type of the _VSTD_Vector's data.
  * @param[in]
- *   vec : _VSTD_Vector to modify.
+ *   vec : Pointer to _VSTD_Vector to modify.
  * @param[in]
  *   index : Index to remove.
  *
  * */
 #define vstd_vector_remove(type, vec, index)                                   \
   do {                                                                         \
-    if (index != ((isize)vec.len - 1)) {                                       \
-      type *ptr = ((type *)vec.ptr) + index;                                   \
-      memmove(ptr, ptr + 1, (vec.len - (index + 1)) * sizeof(type));           \
+    if (index != ((isize)vec->len - 1)) {                                      \
+      type *ptr = ((type *)vec->ptr) + index;                                  \
+      memmove(ptr, ptr + 1, (vec->len - (index + 1)) * sizeof(type));          \
     }                                                                          \
-    vec.len--;                                                                 \
+    vec->len--;                                                                \
   } while (0)
 
 /*****************************************************************************
@@ -815,12 +811,12 @@ struct _VSTD_Vector {
  * @param[in]
  *   type : Type of the _VSTD_Vector's data.
  * @param[in]
- *   vec : _VSTD_Vector to clear.
+ *   vec : Pointer to _VSTD_Vector to clear.
  *
  * */
 #define vstd_vector_clear(type, vec)                                           \
   do {                                                                         \
-    vec.len = 0;                                                               \
+    vec->len = 0;                                                              \
   } while (0)
 
 /*****************************************************************************
@@ -834,15 +830,15 @@ struct _VSTD_Vector {
  * @param[in]
  *   type : Type of the _VSTD_Vector's data.
  * @param[in]
- *   vec : _VSTD_Vector to free.
+ *   vec : Pointer to _VSTD_Vector to free.
  *
  * */
 #define vstd_vector_free(type, vec)                                            \
   do {                                                                         \
-    free(vec.ptr);                                                             \
-    vec.ptr = NULL;                                                            \
-    vec.cap = 0;                                                               \
-    vec.len = 0;                                                               \
+    free(vec->ptr);                                                            \
+    vec->ptr = NULL;                                                           \
+    vec->cap = 0;                                                              \
+    vec->len = 0;                                                              \
   } while (0)
 
 /*****************************************************************************
@@ -966,10 +962,10 @@ struct _VSTD_Map {
     bool exists;                                                               \
     vstd_map_contains(k, v, map, &key, &exists);                               \
     if (!exists) {                                                             \
-      vstd_vector_push(k, map.keys, key);                                      \
-      vstd_vector_push(v, map.vals, value);                                    \
+      vstd_vector_push(k, (&map.keys), key);                                   \
+      vstd_vector_push(v, (&map.vals), value);                                 \
     } else {                                                                   \
-      vstd_vector_set(v, map.vals, map.cache, value);                          \
+      vstd_vector_set(v, (&map.vals), map.cache, value);                       \
     }                                                                          \
   } while (0)
 
@@ -1028,8 +1024,8 @@ struct _VSTD_Map {
     bool exists;                                                               \
     vstd_map_contains(k, v, map, &key, &exists);                               \
     if (exists) {                                                              \
-      vstd_vector_remove(k, map.keys, map.cache);                              \
-      vstd_vector_remove(v, map.vals, map.cache);                              \
+      vstd_vector_remove(k, (&map.keys), map.cache);                           \
+      vstd_vector_remove(v, (&map.vals), map.cache);                           \
     }                                                                          \
   } while (0)
 
@@ -1090,8 +1086,8 @@ struct _VSTD_Map {
  * */
 #define vstd_map_clear(k, v, map)                                              \
   do {                                                                         \
-    vstd_vector_clear(k, map.keys);                                            \
-    vstd_vector_clear(v, map.vals);                                            \
+    vstd_vector_clear(k, (&map.keys));                                         \
+    vstd_vector_clear(v, (&map.vals));                                         \
     map.cache = -1;                                                            \
   } while (0)
 
@@ -1114,8 +1110,8 @@ struct _VSTD_Map {
  * */
 #define vstd_map_free(k, v, map)                                               \
   do {                                                                         \
-    vstd_vector_free(k, map.keys);                                             \
-    vstd_vector_free(v, map.vals);                                             \
+    vstd_vector_free(k, (&map.keys));                                          \
+    vstd_vector_free(v, (&map.vals));                                          \
     map.cache = -1;                                                            \
   } while (0)
 
