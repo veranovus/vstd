@@ -1127,21 +1127,21 @@ struct _VSTD_Map {
  * */
 
 #ifndef VSTD_MAP_NO_PREDEFINED_CONDITIONS
-VSTD_STATIC bool vstd_map_condition_isize(const isize *a, const isize *b) {
-  return *(a) == *(b);
+VSTD_STATIC bool vstd_map_condition_isize(const isize a, const isize b) {
+  return a == b;
 }
 
-VSTD_STATIC bool vstd_map_condition_usize(const usize *a, const usize *b) {
-  return *(a) == *(b);
+VSTD_STATIC bool vstd_map_condition_usize(const usize a, const usize b) {
+  return a == b;
 }
 
-VSTD_STATIC bool vstd_map_condition_string(const _VSTD_String *a,
-                                           const _VSTD_String *b) {
-  return vstd_string_compare(a, b->ptr) == VSTD_STRING_EQUAL;
+VSTD_STATIC bool vstd_map_condition_string(const _VSTD_String a,
+                                           const _VSTD_String b) {
+  return vstd_string_compare(&a, b.ptr) == VSTD_STRING_EQUAL;
 }
 
-VSTD_STATIC bool vstd_map_condition_void(const void **a, const void **b) {
-  return *a == *b;
+VSTD_STATIC bool vstd_map_condition_void(const void *a, const void *b) {
+  return a == b;
 }
 #endif
 
