@@ -590,9 +590,7 @@ struct _VSTD_Vector {
  *
  * */
 #define vstd_vector_new(type)                                                  \
-  do {                                                                         \
-    vstd_vector_with_capacity(type, VSTD_VECTOR_INITIAL_CAP);                  \
-  } while (0)
+  vstd_vector_with_capacity(type, VSTD_VECTOR_INITIAL_CAP)
 
 /*****************************************************************************
  *
@@ -822,7 +820,7 @@ struct _VSTD_Vector {
  * */
 #define vstd_vector_clear(type, vec)                                           \
   do {                                                                         \
-    vec.len = 0                                                                \
+    vec.len = 0;                                                               \
   } while (0)
 
 /*****************************************************************************
