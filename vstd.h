@@ -720,7 +720,7 @@ struct _VSTD_Vector {
  * */
 #define vstd_vector_set(type, vec, index, item)                                \
   do {                                                                         \
-    ((type *)vec.ptr)[index] = item                                            \
+    ((type *)vec.ptr)[index] = item;                                           \
   } while (0)
 
 /*****************************************************************************
