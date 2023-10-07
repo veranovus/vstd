@@ -929,7 +929,7 @@ struct _VSTD_Map {
          ++_ptr) {                                                             \
       if (((bool (*)(k, k))map.func_ptr)(*_ptr, key)) {                        \
         *(result) = true;                                                      \
-        map.cache = (iptr)_ptr - (iptr)map.keys.ptr;                           \
+        map.cache = ((iptr)_ptr - (iptr)map.keys.ptr) / sizeof(k);             \
         break;                                                                 \
       }                                                                        \
     }                                                                          \
